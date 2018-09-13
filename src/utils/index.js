@@ -18,4 +18,23 @@ export const formatTime = (date) => {
   return `${t1} ${t2}`
 }
 
+export const inArray = (needle, haystack, argStrict) => {
+  var key = ''
+  var strict = !!argStrict
+  if (strict) {
+    for (key in haystack) {
+      if (haystack[key] === needle) {
+        return true
+      }
+    }
+  } else {
+    for (key in haystack) {
+      if (haystack[key] === needle) {
+        return true
+      }
+    }
+  }
+  return false
+}
+
 export const REQ_URL = 'https://api.wangxuefeng.com.cn'

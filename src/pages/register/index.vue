@@ -1,8 +1,8 @@
 <template>
   <div>
     <p class="card gray-font font-12">系统检测到您是第一次打开此小程序，您可以进行以下操作</p>
-    <div class="card" style="padding-top:15px;padding-bottom:15px;">
-      <h6 class="gray-font font-12">绑定iYoungon账号</h6>
+    <div class="card userBind" :class="{'hideRegister': !isHideReg}">
+      <h6 class="gray-font font-12" @click="isHideReg = !isHideReg">绑定iYoungon账号</h6>
       <div class="md-input-container">
         <input type="text" required="required" class="font-14" placeholder="学号" v-model="bdstuid">
       </div>
@@ -11,8 +11,8 @@
       </div>
       <button class="btn bluebcak bindUser" @click="updateWxid()">绑定账号</button>
     </div>
-    <div class="card" style="padding-top:15px;padding-bottom:15px;">
-      <h6 class="gray-font font-12">注册iYoungon账号</h6>      
+    <div class="card register" :class="{'hideRegister': isHideReg}">
+      <h6 class="gray-font font-12" @click="isHideReg = !isHideReg">注册iYoungon账号</h6>      
       <div class="md-input-container">
         <input type="text" required="required" class="font-14" placeholder="学号" v-model="stuid">
       </div>
@@ -35,7 +35,7 @@
           </p>
         </picker>        
       </div>      
-      <div class="md-input-container" style="flex-direction: column;" v-if="utype != 0">
+      <div class="md-input-container" style="flex-direction: column;" v-if="utype != 0 && utype !=1 ">
         <span class="gray-font font-16">请联系网站工作人员申请注册码</span>
         <input type="text" required="required" class="font-14" placeholder="注册码" v-model="rcode">
       </div>
@@ -45,7 +45,7 @@
 </template>
 
 <script>
-const REQ_URL = 'https://api.wangxuefeng.com.cn'
+import { REQ_URL } from '@/utils'
 export default {
   data () {
     return {
@@ -59,7 +59,8 @@ export default {
       utype: 0,
       rcode: '',
       openid: '',
-      utypeItem: ['普通用户', '实习站员', '正式站员', '往届站员']
+      utypeItem: ['请选择', '普通用户', '实习站员', '正式站员', '往届站员'],
+      isHideReg: true
     }
   },
   methods: {
@@ -113,7 +114,11 @@ export default {
       if (!this.checkVar([this.stuid, this.name, this.password, this.repassword, this.email, this.utype], ['学号', '姓名', '密码', '重复密码', '邮箱', '用户类型'])) {
         return false
       }
-      if (Number(this.utype) !== 0 && !this.checkVar([this.rcode], ['注册码'])) {
+      if ((Number(this.utype) !== 0 && Number(this.utype) !== 1) && !this.checkVar([this.rcode], ['注册码'])) {
+        return false
+      }
+      if (Number(this.utype) === 0) {
+        this.toast('请选择用户类型')
         return false
       }
       if (this.password !== this.repassword) {
@@ -136,7 +141,7 @@ export default {
             'password': this.password,
             'name': this.name,
             'email': this.email,
-            'utype': this.utype,
+            'utype': this.utype - 1,
             'wxid': this.openid
           }
           let req = {
@@ -253,6 +258,16 @@ export default {
   background-color: rgb(18, 150, 219)!important;
   color: #ffffff!important;
 }
+.userBind,
+.register {
+  padding-top:15px;
+  padding-bottom:15px;
+  overflow: hidden;
+  transition: all 300ms linear;
+}
+.hideRegister {
+  height: 20px;
+}
 .btn {
     min-width: 88px;
     min-height: 36px;
@@ -266,11 +281,8 @@ export default {
     -ms-user-select: none;
     user-select: none;
     cursor: pointer;
-    background: none;
     border: 0;
-    border-radius: 2px;
     transition: all .4s cubic-bezier(.25,.8,.25,1);
-    color: currentColor;
     font-family: inherit;
     font-size: 14px;
     font-style: inherit;

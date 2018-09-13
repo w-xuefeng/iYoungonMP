@@ -63,7 +63,7 @@
 </template>
 
 <script>
-const REQ_URL = 'https://api.wangxuefeng.com.cn'
+import { REQ_URL } from '@/utils'
 export default {
   data () {
     return {
@@ -104,8 +104,15 @@ export default {
               break
             case 'all?page=0': this.all = ret.data
               break
-            default : this.all.push.apply(this.all, ret.data)
+            default : if (ret.data.length !== 0) {
+              this.all.push.apply(this.all, ret.data)
+            } else {
+              this.toast('已加载所有签到记录')
+            }
           }
+        },
+        complete: () => {
+          wx.stopPullDownRefresh()
         }
       }
       wx.request(config)
@@ -116,12 +123,26 @@ export default {
         icon: 'none',
         duration: 2000
       })
+    },
+    refreshPage () {
+      this.getRecord('thisweek')
+      this.getRecord('lastweek')
+      this.getRecord('all?page=0')
+    }
+  },
+  onPullDownRefresh () {
+    this.refreshPage()
+  },
+  onReachBottom () {
+    if (this.activeIndex === '2') {
+      this.getRecord(`all?page=${this.all.length}`)
     }
   },
   mounted () {
+    this.refreshPage()
+  },
+  onShow () {
     this.getRecord('thisweek')
-    this.getRecord('lastweek')
-    this.getRecord('all?page=0')
   }
 }
 </script>

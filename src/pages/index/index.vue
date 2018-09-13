@@ -60,7 +60,7 @@
 
 <script>
 import wxParse from 'mpvue-wxparse'
-const REQ_URL = 'https://api.wangxuefeng.com.cn'
+import { REQ_URL } from '@/utils'
 export default {
   components: {
     wxParse
@@ -83,6 +83,9 @@ export default {
         url: `${REQ_URL}/notice/get`,
         success: (res) => {
           this.notice = res.data
+        },
+        complete: () => {
+          wx.stopPullDownRefresh()
         }
       }
       wx.request(req)
@@ -92,6 +95,9 @@ export default {
         url: `${REQ_URL}/users/get/online`,
         success: (res) => {
           this.online = res.data.resdata
+        },
+        complete: () => {
+          wx.stopPullDownRefresh()
         }
       }
       wx.request(req)
@@ -101,6 +107,9 @@ export default {
         url: `${REQ_URL}/users/get/haskey`,
         success: (res) => {
           this.ifkey = res.data.resdata
+        },
+        complete: () => {
+          wx.stopPullDownRefresh()
         }
       }
       wx.request(req)
@@ -146,13 +155,21 @@ export default {
       } else {
         this.toast('该站员尚未绑定手机号码')
       }
+    },
+    refreshPage () {
+      this.getLastNotice()
+      this.getOnline()
+      this.getKey()
     }
+  },
+  onPullDownRefresh () {
+    this.refreshPage()
   },
   mounted () {
     this.getWXUserInfor()
-    this.getLastNotice()
-    this.getOnline()
-    this.getKey()
+  },
+  onShow () {
+    this.refreshPage()
   }
 }
 </script>

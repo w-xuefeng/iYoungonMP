@@ -20,7 +20,7 @@ export default {
       'pages/record/main'
     ],
     window: {
-      backgroundTextStyle: 'light',
+      backgroundTextStyle: 'dark',
       navigationBarBackgroundColor: '#1296DB',
       navigationBarTitleText: 'iYoungon',
       navigationBarTextStyle: '#FFF'
