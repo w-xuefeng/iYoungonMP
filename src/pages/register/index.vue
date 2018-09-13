@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="card gray-font font-12">系统检测到您是第一次打开此小程序，您可以进行以下操作</p>
+    <p class="card gray-font font-12">系统检测到您还没有绑定账号，您可以进行以下操作</p>
     <div class="card userBind" :class="{'hideRegister': !isHideReg}">
       <h6 class="gray-font font-12" @click="isHideReg = !isHideReg">绑定iYoungon账号</h6>
       <div class="md-input-container">

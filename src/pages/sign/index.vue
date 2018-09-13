@@ -43,6 +43,27 @@ export default {
     PickerChange (e) {
       this.indexPicker = e.mp.detail.value
     },
+    getWXUserInfor () {
+      wx.login({
+        success: (res) => {
+          if (res.code) {
+            wx.request({
+              url: `${REQ_URL}/users/get/wxlogin?code=${res.code}`,
+              success: (res) => {
+                if (!res.data.status) {
+                  wx.setStorageSync('openid', res.data.openid)
+                  wx.navigateTo({
+                    url: '/pages/register/main'
+                  })
+                }
+              }
+            })
+          } else {
+            console.log('登录失败！' + res.errMsg)
+          }
+        }
+      })
+    },
     checkOnline () {
       let req = {
         url: `${REQ_URL}/users?token=${this.user.token}`,
@@ -275,6 +296,11 @@ export default {
   },
   mounted () {
     this.init()
+  },
+  onShow () {
+    if (!this.user.stuid) {
+      this.getWXUserInfor()
+    }
   }
 }
 </script>
