@@ -24,7 +24,7 @@
         <div class="weui-panel__hd">当前在站</div>
         <div class="weui-panel__bd">
           <div v-if="online === null || online.length === 0" class="text-center gray-font font-12">暂无站员在站</div>
-          <navigator v-if="online && online.length != 0" url="" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active" v-for="user in online" :key="user.stuid">
+          <navigator v-if="online && online.length != 0"  v-for="user in online" :key="user.stuid" :url="'/pages/signdetails/main?stuid=' + user.stuid + '&head=' + user.head + '&reason=' + user.reason + '&entertime=' + user.entertime + '&outtertime=' + user.outtertime" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
             <div class="weui-media-box__hd weui-media-box__hd_in-appmsg imgCircle">
               <image class="weui-media-box__thumb imgCircle size45" :src="ASSET_URL + user.head" />
             </div>
@@ -95,6 +95,11 @@ export default {
         url: `${REQ_URL}/users/get/online`,
         success: (res) => {
           this.online = res.data.resdata
+          if (this.online) {
+            for (let i = 0; i < res.data.resdata.length; i++) {
+              this.online[i].outtertime = '1949-10-01 00:00:00'
+            }
+          }
         },
         complete: () => {
           wx.stopPullDownRefresh()
@@ -183,6 +188,8 @@ export default {
 }
 .imgCircle {
   border-radius: 50%;
+  display: flex;
+  align-items: center;
 }
 .notice {
   padding-left: 15px;

@@ -5,7 +5,8 @@
     "pages/dynamic/main",
     "pages/record/main",
     "pages/register/main",
-    "pages/sign/main"
+    "pages/sign/main",
+    "pages/signdetails/main"
   ],
   "window": {
     "backgroundTextStyle": "dark",

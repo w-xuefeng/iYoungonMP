@@ -4,29 +4,29 @@
     <div class="card userBind" :class="{'hideRegister': !isHideReg}">
       <h6 class="gray-font font-12" @click="isHideReg = !isHideReg">绑定iYoungon账号</h6>
       <div class="md-input-container">
-        <input type="text" required="required" class="font-14" placeholder="学号" v-model="bdstuid">
+        <input type="text" required="required" class="font-14" placeholder="学号" v-model.lazy="bdstuid">
       </div>
       <div class="md-input-container">
-        <input type="password" required="required" class="font-14" placeholder="密码" v-model="bdpassword">
+        <input type="password" required="required" class="font-14" placeholder="密码" v-model.lazy="bdpassword">
       </div>
       <button class="btn bluebcak bindUser" @click="updateWxid()">绑定账号</button>
     </div>
     <div class="card register" :class="{'hideRegister': isHideReg}">
       <h6 class="gray-font font-12" @click="isHideReg = !isHideReg">注册iYoungon账号</h6>      
       <div class="md-input-container">
-        <input type="text" required="required" class="font-14" placeholder="学号" v-model="stuid">
+        <input type="text" required="required" class="font-14" placeholder="学号" v-model.lazy="stuid">
       </div>
       <div class="md-input-container">
-        <input type="text" required="required" class="font-14" placeholder="姓名" v-model="name">
+        <input type="text" required="required" class="font-14" placeholder="姓名" v-model.lazy="name">
       </div>
       <div class="md-input-container">
-        <input type="password" required="required" class="font-14" placeholder="密码" v-model="password">
+        <input type="password" required="required" class="font-14" placeholder="密码" v-model.lazy="password">
       </div>
       <div class="md-input-container">
-        <input type="password" required="required" class="font-14" placeholder="重复密码" v-model="repassword">
+        <input type="password" required="required" class="font-14" placeholder="重复密码" v-model.lazy="repassword">
       </div>
       <div class="md-input-container">
-        <input type="email" required="required" class="font-14" placeholder="邮箱" v-model="email">
+        <input type="email" required="required" class="font-14" placeholder="邮箱" v-model.lazy="email">
       </div>
       <div class="md-input-container">
         <picker class="weui-btn signpicker" @change="PickerChange" :value="utype" :range="utypeItem">        

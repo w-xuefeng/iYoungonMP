@@ -14,7 +14,7 @@
           <div class="weui-tab__content" :hidden="activeIndex != 0">
             <div class="weui-panel__bd">
               <div v-if="thisweek === null || thisweek.length === 0" class="text-center gray-font font-16 marginT15">暂无记录</div>
-              <navigator v-if="thisweek && thisweek.length != 0" url="" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active" v-for="user in thisweek" :key="user.stuid">
+              <navigator v-if="thisweek && thisweek.length != 0" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active" v-for="user in thisweek" :key="user.stuid" :url="'/pages/signdetails/main?stuid=' + user.stuid + '&head=' + user.head + '&reason=' + user.reason + '&entertime=' + user.entertime + '&outtertime=' + user.outtertime">
                 <div class="weui-media-box__hd weui-media-box__hd_in-appmsg imgCircle">
                   <image class="weui-media-box__thumb imgCircle size45" :src="ASSET_URL + user.head" />
                 </div>
@@ -29,7 +29,7 @@
           <div class="weui-tab__content" :hidden="activeIndex != 1">
             <div class="weui-panel__bd">
               <div v-if="lastweek === null || lastweek.length === 0" class="text-center gray-font font-16 marginT15">暂无记录</div>
-              <navigator v-if="lastweek && lastweek.length != 0" url="" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active" v-for="user in lastweek" :key="user.stuid">
+              <navigator v-if="lastweek && lastweek.length != 0" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active" v-for="user in lastweek" :key="user.stuid" :url="'/pages/signdetails/main?stuid=' + user.stuid + '&head=' + user.head + '&reason=' + user.reason + '&entertime=' + user.entertime + '&outtertime=' + user.outtertime">
                 <div class="weui-media-box__hd weui-media-box__hd_in-appmsg imgCircle">
                   <image class="weui-media-box__thumb imgCircle size45" :src="ASSET_URL + user.head" />
                 </div>
@@ -44,7 +44,7 @@
           <div class="weui-tab__content" :hidden="activeIndex != 2">
             <div class="weui-panel__bd">
               <div v-if="all === null || all.length === 0" class="text-center gray-font font-16 marginT15">暂无记录</div>
-              <navigator v-if="all && all.length != 0" url="" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active" v-for="user in all" :key="user.stuid">
+              <navigator v-if="all && all.length != 0" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active" v-for="user in all" :key="user.stuid" :url="'/pages/signdetails/main?stuid=' + user.stuid + '&head=' + user.head + '&reason=' + user.reason + '&entertime=' + user.entertime + '&outtertime=' + user.outtertime">
                 <div class="weui-media-box__hd weui-media-box__hd_in-appmsg imgCircle">
                   <image class="weui-media-box__thumb imgCircle size45" :src="ASSET_URL + user.head" />
                 </div>
@@ -181,6 +181,8 @@ page,
 }
 .imgCircle {
   border-radius: 50%;
+  display: flex;
+  align-items: center;
 }
 .notice {
   padding-left: 15px;
