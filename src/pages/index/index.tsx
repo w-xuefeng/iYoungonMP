@@ -50,19 +50,22 @@ export default class Index extends Component<any, any> {
   }
 
   registerOrBindAccountDom () {
-    const tabList = [{ title: '绑定 iYoungon 帐号' }, { title: '注册 iYoungon 帐号' }]
+    const tabList = [
+      {
+        title: '绑定 iYoungon 帐号'
+      },
+      {
+        title: '注册 iYoungon 帐号'
+      }
+    ]
     const { currentRegOrBindTabs } = this.state
     return (
       <AtTabs current={currentRegOrBindTabs} tabList={tabList} onClick={this.switchTabs.bind(this)}>
         <AtTabsPane current={currentRegOrBindTabs} index={0} >
-          <View>
-            <YGBindAccount></YGBindAccount>
-          </View>
+          <YGBindAccount></YGBindAccount>
         </AtTabsPane>
         <AtTabsPane current={currentRegOrBindTabs} index={1}>
-          <View>
-            <YGRegister></YGRegister>
-          </View>
+          <YGRegister></YGRegister>
         </AtTabsPane>
       </AtTabs>
     )

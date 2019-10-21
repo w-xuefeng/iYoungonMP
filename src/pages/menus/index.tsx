@@ -14,6 +14,7 @@ export default class MenusPage extends Component {
    */
   config: Config = {
     navigationBarBackgroundColor: '#007acc',
+    navigationStyle: 'custom',
     navigationBarTitleText: 'iYoungon',
     navigationBarTextStyle: 'white'
   }

@@ -16,7 +16,9 @@ export default class YGRegister extends Component {
 
   render () {
     return (
-      <View className='page'></View>
+      <View className='page'>
+        注册帐号
+      </View>
     )
   }
 }

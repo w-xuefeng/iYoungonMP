@@ -16,7 +16,9 @@ export default class YGBindAccount extends Component {
 
   render () {
     return (
-      <View className='page'></View>
+      <View className='page'>
+        绑定账号
+      </View>
     )
   }
 }

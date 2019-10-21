@@ -73,19 +73,21 @@ export default class YGMenu extends Component<YGMenuPropsType> {
       <View className='page'>
         <View className='header'>
           <View className='cover'>
-            <View className='headimg ml-20'>
-              <AtAvatar circle image={fullhead}></AtAvatar>
-            </View>
-            <View className='header-info ml-20'>
-              <View className='name-level'>
-                <Text>{name}</Text>
-                <View className='level-btn ml-20'>
-                  YGLV {ulevel}
-                </View>
+            <View className='header-content'>
+              <View className='headimg'>
+                <AtAvatar circle image={fullhead}></AtAvatar>
               </View>
-              {
-                ulevel === 0 ? '' : <RichText nodes={level.outputLevelHTML()}></RichText>
-              }
+              <View className='header-info ml-20'>
+                <View className='name-level'>
+                  <Text>{name}</Text>
+                  <View className='level-btn ml-20'>
+                    YGLV {ulevel}
+                  </View>
+                </View>
+                {
+                  ulevel === 0 ? '' : <RichText nodes={level.outputLevelHTML()}></RichText>
+                }
+              </View>            
             </View>          
           </View>            
         </View>
