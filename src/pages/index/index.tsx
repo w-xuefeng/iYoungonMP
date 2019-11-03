@@ -1,6 +1,7 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { AtButton, AtTabs, AtTabsPane } from 'taro-ui'
+import { getUserInfo } from '../../api/api'
 import YGRegister from '../../components/YGRegister'
 import YGBindAccount from '../../components/YGBindAccount'
 import './index.less'
@@ -30,12 +31,17 @@ export default class Index extends Component<any, any> {
     super(...arguments)
     this.state = {
       currentRegOrBindTabs: 0,
+      user: {},
     }
   }
 
   componentWillMount () { }
 
-  componentDidMount () { }
+  componentDidMount () {
+    getUserInfo().then(rs => {
+      console.log(rs)
+    })
+  }
 
   componentWillUnmount () { }
 
