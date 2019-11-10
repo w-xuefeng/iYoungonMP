@@ -1,12 +1,20 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View } from '@tarojs/components'
-import { AtButton, AtTabs, AtTabsPane } from 'taro-ui'
+import { AtTabs, AtTabsPane, AtTag } from 'taro-ui'
 import { getUserInfo } from '../../api/api'
+import { LocalData, LDKey, isDataTimeOut } from '../../utils/index';
+import { User } from '../../models'
 import YGRegister from '../../components/YGRegister'
 import YGBindAccount from '../../components/YGBindAccount'
 import './index.less'
 
-export default class Index extends Component<any, any> {
+
+interface IndexPageStateType {
+  currentRegOrBindTabs: number
+  user: User,
+  isBindAccount: boolean
+}
+export default class Index extends Component<any, IndexPageStateType> {
 
   /**
    * 指定config的类型声明为: Taro.Config
@@ -31,28 +39,50 @@ export default class Index extends Component<any, any> {
     super(...arguments)
     this.state = {
       currentRegOrBindTabs: 0,
-      user: {},
+      user: new User,
+      isBindAccount: true
     }
   }
 
-  componentWillMount () { }
-
-  componentDidMount () {
-    getUserInfo().then(rs => {
-      console.log(rs)
-    })
+  componentWillMount () {
+    this.login()
   }
+
+  componentDidMount () {}
 
   componentWillUnmount () { }
 
   componentDidShow () { }
 
-  componentDidHide () { }
+  componentDidHide () {}
 
   switchTabs (value: number) {
     this.setState({
       currentRegOrBindTabs: value
     })
+  }
+
+  login() {
+    if(!LocalData.getItem(LDKey.OPENID) || isDataTimeOut()) {
+      getUserInfo().then(rs => {
+        if (rs && rs.status) {
+          LocalData.setItem(LDKey.OPENID, rs.openid)
+          LocalData.setItem(LDKey.USER, rs.resdata)
+          LocalData.setItem(LDKey.TIMESTAMP, new Date().getTime())
+          this.setState({
+            user: rs.resdata
+          })
+        } else {
+          this.setState({
+            isBindAccount: false
+          })
+        }
+      })
+    } else {
+      this.setState({
+        user: LocalData.getItem(LDKey.USER)
+      })
+    }
   }
 
   registerOrBindAccountDom () {
@@ -68,29 +98,36 @@ export default class Index extends Component<any, any> {
     return (
       <AtTabs current={currentRegOrBindTabs} tabList={tabList} onClick={this.switchTabs.bind(this)}>
         <AtTabsPane current={currentRegOrBindTabs} index={0} >
-          <YGBindAccount></YGBindAccount>
+          <YGBindAccount />
         </AtTabsPane>
         <AtTabsPane current={currentRegOrBindTabs} index={1}>
-          <YGRegister></YGRegister>
+          <YGRegister />
         </AtTabsPane>
       </AtTabs>
     )
   }
 
+  indexPage() {
+    const { user } = this.state
+    return (
+      <View>
+        <View>
+          <AtTag type='primary' circle>学号：{ user.stuid }</AtTag>
+        </View>
+        <View>
+          <AtTag type='primary' circle>姓名：{ user.name }</AtTag>
+        </View>
+      </View>
+    )
+  }
+
   render () {
+    const { isBindAccount } = this.state
     return (
       <View className='index'>
         {
-          this.registerOrBindAccountDom()
+          isBindAccount? this.indexPage() : this.registerOrBindAccountDom()
         }
-        <AtButton
-          className='menu-btn'
-          type='primary'
-          size='small' circle={true}
-          onClick={this.openMenuPage}
-        >
-          菜单
-        </AtButton>
       </View>
     )
   }

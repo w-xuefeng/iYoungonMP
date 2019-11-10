@@ -1,8 +1,18 @@
 import { YGURL } from './url'
 import { Req, getCode, HttpRequestOption } from './req'
 
-// 绑定 wxid
-export const bindAccount = ({ stuid, password, wxid }) => {
+/**
+ * @function 绑定微信账号
+ * */ 
+export const bindAccount = ({
+  stuid,
+  password,
+  wxid
+}:{
+  stuid: string,
+  password: string,
+  wxid: string
+}) => {
   const opt: HttpRequestOption = {
     url: YGURL.patch_wxid,
     data: { stuid, password, wxid },
@@ -11,8 +21,24 @@ export const bindAccount = ({ stuid, password, wxid }) => {
   return  Req(opt)
 }
 
-// 注册 账号
-export const regAccount = ({ stuid, password, name, email, utype, wxid }) => {
+/**
+ * @function 注册账号
+ * */ 
+export const regAccount = ({
+  stuid,
+  password,
+  name,
+  email,
+  utype,
+  wxid
+}: {
+  stuid: string,
+  password: string,
+  name: string,
+  email: string,
+  utype: string | number,
+  wxid: string
+}) => {
   const opt: HttpRequestOption = {
     url: YGURL.post_users,
     data: { stuid, password, name, email, utype, wxid },
@@ -21,9 +47,11 @@ export const regAccount = ({ stuid, password, name, email, utype, wxid }) => {
   return  Req(opt)
 }
 
-// 获取 用户信息
-export const getUserInfo = async () => {
-  return await getCode().then(rs => {
+/**
+ * @function 获取用户信息
+ * */ 
+export const getUserInfo = () => {
+  return getCode().then(rs => {
     const opt: HttpRequestOption = {
       url: YGURL.get_users,
       data: { code: rs.code },
