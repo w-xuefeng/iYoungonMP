@@ -1,6 +1,7 @@
 import Taro from '@tarojs/taro'
-const wxToken = "lalala"
-const loginUrlTag = '/session'
+import { loginUrlTag } from './url'
+const wxToken = 'lalala'
+
 
 export interface HttpRequestOption {
   url: string
@@ -26,7 +27,8 @@ export interface HttpResponOption {
 
 export const Req = (opt: HttpRequestOption) => {
   let res: HttpResponOption;
-  if (!opt.url.includes(loginUrlTag)) {
+  const isLoginReq = opt.url.includes(loginUrlTag)
+  if (!isLoginReq) {
     opt.header = {
       'content-type': 'application/json',
       'Authorization': `Bearer ${wxToken}`,
@@ -38,6 +40,7 @@ export const Req = (opt: HttpRequestOption) => {
     res = rs
     if (
       !res.status &&
+      !isLoginReq &&
       (res.title || res.msg || res.message || res.error)
     ) {
       Taro.showToast({

@@ -1,4 +1,5 @@
-export const BaseUrl = 'https://api.wangxuefeng.com.cn';
+export const BaseUrl = 'https://api.wangxuefeng.com.cn'
+export const loginUrlTag = '/wxlogin'
 
 export class YGURL {
 

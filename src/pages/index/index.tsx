@@ -1,18 +1,13 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View } from '@tarojs/components'
-import { AtTabs, AtTabsPane, AtTag } from 'taro-ui'
-import { getUserInfo } from '../../api/api'
-import { LocalData, LDKey, isDataTimeOut } from '../../utils/index';
+import { LocalData, LDKey, accountPagePath } from '../../utils/index';
 import { User } from '../../models'
-import YGRegister from '../../components/YGRegister'
-import YGBindAccount from '../../components/YGBindAccount'
+import YGHeader from '../../components/YGHeader'
 import './index.less'
 
 
 interface IndexPageStateType {
-  currentRegOrBindTabs: number
-  user: User,
-  isBindAccount: boolean
+  user: User
 }
 export default class Index extends Component<any, IndexPageStateType> {
 
@@ -24,7 +19,8 @@ export default class Index extends Component<any, IndexPageStateType> {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    navigationBarBackgroundColor: '#007acc',
+    navigationStyle: 'custom',
+    navigationBarBackgroundColor: '#007acc',    
     navigationBarTitleText: 'iYoungon',
     navigationBarTextStyle: 'white'
   }
@@ -38,96 +34,35 @@ export default class Index extends Component<any, IndexPageStateType> {
   constructor () {
     super(...arguments)
     this.state = {
-      currentRegOrBindTabs: 0,
       user: new User,
-      isBindAccount: true
     }
   }
 
   componentWillMount () {
-    this.login()
+    const user = LocalData.getItem(LDKey.USER)
+    if (user) {
+      this.setState({ user })
+    } else {
+      Taro.redirectTo({
+        url: accountPagePath
+      })
+    }    
   }
 
   componentDidMount () {}
 
-  componentWillUnmount () { }
+  componentWillUnmount () {}
 
   componentDidShow () { }
 
   componentDidHide () {}
 
-  switchTabs (value: number) {
-    this.setState({
-      currentRegOrBindTabs: value
-    })
-  }
-
-  login() {
-    if(!LocalData.getItem(LDKey.OPENID) || isDataTimeOut()) {
-      getUserInfo().then(rs => {
-        if (rs && rs.status) {
-          LocalData.setItem(LDKey.OPENID, rs.openid)
-          LocalData.setItem(LDKey.USER, rs.resdata)
-          LocalData.setItem(LDKey.TIMESTAMP, new Date().getTime())
-          this.setState({
-            user: rs.resdata
-          })
-        } else {
-          this.setState({
-            isBindAccount: false
-          })
-        }
-      })
-    } else {
-      this.setState({
-        user: LocalData.getItem(LDKey.USER)
-      })
-    }
-  }
-
-  registerOrBindAccountDom () {
-    const tabList = [
-      {
-        title: '绑定 iYoungon 帐号'
-      },
-      {
-        title: '注册 iYoungon 帐号'
-      }
-    ]
-    const { currentRegOrBindTabs } = this.state
-    return (
-      <AtTabs current={currentRegOrBindTabs} tabList={tabList} onClick={this.switchTabs.bind(this)}>
-        <AtTabsPane current={currentRegOrBindTabs} index={0} >
-          <YGBindAccount />
-        </AtTabsPane>
-        <AtTabsPane current={currentRegOrBindTabs} index={1}>
-          <YGRegister />
-        </AtTabsPane>
-      </AtTabs>
-    )
-  }
-
-  indexPage() {
+  render () {
     const { user } = this.state
     return (
-      <View>
-        <View>
-          <AtTag type='primary' circle>学号：{ user.stuid }</AtTag>
-        </View>
-        <View>
-          <AtTag type='primary' circle>姓名：{ user.name }</AtTag>
-        </View>
-      </View>
-    )
-  }
-
-  render () {
-    const { isBindAccount } = this.state
-    return (
       <View className='index'>
-        {
-          isBindAccount? this.indexPage() : this.registerOrBindAccountDom()
-        }
+        <YGHeader />
+        <View> {user.stuid} </View>
       </View>
     )
   }

@@ -67,3 +67,41 @@ export const isDataTimeOut = () => {
   }
   return true
 }
+
+/**
+ * 首页地址
+ */
+export const indexPagePath = '/pages/index/index'
+
+/**
+ * 账号设置页面地址
+ */
+export const accountPagePath = '/pages/account/index'
+
+/**
+ * 判断不为空
+ */
+export const notEmpty = (arrs: { key: string, value: string | number}[]) => {
+  let rs = true
+  for (let i = 0; i < arrs.length; i++) {
+    if (!arrs[i].value) {
+      Taro.showToast({
+        title: `${arrs[i].key}不能为空`,
+        icon: 'none',
+        duration: 2000
+      })
+      rs = false
+      break
+    }    
+  }
+  return rs
+}
+
+/**
+ * 跳转到首页
+ */
+export const gotoIndex = () => {
+  Taro.switchTab({
+    url: indexPagePath
+  })
+}
