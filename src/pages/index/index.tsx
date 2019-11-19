@@ -1,8 +1,8 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View } from '@tarojs/components'
-import { LocalData, LDKey, accountPagePath } from '../../utils/index';
-import { User } from '../../models'
-import YGHeader from '../../components/YGHeader'
+import { LocalData, LDKey, accountPagePath } from '@/utils/index';
+import { User } from '@/models'
+import YGHeader from '@/components/YGHeader'
 import './index.less'
 
 

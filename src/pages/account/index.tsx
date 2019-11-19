@@ -1,11 +1,11 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { AtTabs, AtTabsPane } from 'taro-ui'
-import { getUserInfo } from '../../api/api'
-import { LocalData, LDKey, isDataTimeOut, gotoIndex } from '../../utils/index'
-import YGHeader from '../../components/YGHeader'
-import YGRegister from '../../components/YGRegister'
-import YGBindAccount from '../../components/YGBindAccount'
+import { getUserInfo } from '@/api/api'
+import { LocalData, LDKey, isDataTimeOut, gotoIndex } from '@/utils/index'
+import YGHeader from '@/components/YGHeader'
+import YGRegister from '@/components/YGRegister'
+import YGBindAccount from '@/components/YGBindAccount'
 import './index.less'
 
 

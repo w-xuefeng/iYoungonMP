@@ -1,8 +1,8 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { AtInput, AtButton  } from 'taro-ui'
-import { bindAccount } from '../../api/api'
-import { LocalData, LDKey, notEmpty, gotoIndex } from '../../utils/index';
+import { bindAccount } from '@/api/api'
+import { LocalData, LDKey, notEmpty, gotoIndex } from '@/utils/index';
 import './index.less'
 export default class YGBindAccount extends Component<any, any> {
 
