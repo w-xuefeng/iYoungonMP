@@ -1,11 +1,11 @@
-@import '../../config.less';
+@import '../../config.scss';
 .page {
   width: 100%;
   min-height: 100vh;
   .header {
     height: 260px;
-    background-color: @menu-page-background-color;
-    background-image: @menu-page-background-image;
+    background-color: $menu-page-background-color;
+    background-image: $menu-page-background-image;
     background-position: center center;
     background-size: cover;
     background-repeat: no-repeat;

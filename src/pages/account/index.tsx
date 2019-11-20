@@ -1,19 +1,19 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { AtTabs, AtTabsPane } from 'taro-ui'
-import { getUserInfo } from '@/api/api'
+import { getUserInfo } from '@/api'
 import { LocalData, LDKey, isDataTimeOut, gotoIndex } from '@/utils/index'
 import YGHeader from '@/components/YGHeader'
 import YGRegister from '@/components/YGRegister'
 import YGBindAccount from '@/components/YGBindAccount'
-import './index.less'
+import './index.scss'
 
 
 interface AccountSettingStateType {
   currentRegOrBindTabs: number
   isBindAccount: boolean
 }
-export default class AccountSetting extends Component<any, AccountSettingStateType> {
+export default class AccountSetting extends Component<{}, AccountSettingStateType> {
 
   /**
    * 指定config的类型声明为: Taro.Config

@@ -1,7 +1,7 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { AtIcon } from 'taro-ui'
-import './index.less'
+import './index.scss'
 
 export interface YGHeaderPropsType {
   title?: string;
@@ -25,14 +25,7 @@ export default class YGHeader extends Component<YGHeaderPropsType, YGHeaderState
       statusBarHeight: '60px'
     }
   }
-
-  getStatusBarHeight() {
-    const { statusBarHeight } = Taro.getSystemInfoSync()
-    this.setState({
-      statusBarHeight: `${statusBarHeight + 5}px`
-    })
-  }
-  
+ 
   componentWillMount() {
     this.getStatusBarHeight()
   }
@@ -40,6 +33,13 @@ export default class YGHeader extends Component<YGHeaderPropsType, YGHeaderState
   componentDidMount() { }
 
   componentWillUnmount() { }
+
+  getStatusBarHeight() {
+    const { statusBarHeight } = Taro.getSystemInfoSync()
+    this.setState({
+      statusBarHeight: `${statusBarHeight + 5}px`
+    })
+  }
 
   componentDidShow() { }
 

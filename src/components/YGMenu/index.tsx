@@ -2,7 +2,7 @@ import Taro, { Component } from '@tarojs/taro'
 import { View, Text, RichText } from '@tarojs/components'
 import { AtAvatar, AtIcon } from 'taro-ui'
 import QQlevel from 'qqlevel';
-import './index.less'
+import './index.scss'
 
 export interface Menu {
   name: string;
@@ -39,7 +39,17 @@ export default class YGMenu extends Component<YGMenuPropsType> {
     super(props)
   }
 
-  initUlevel (mylevel?: number): QQlevel {
+  componentWillMount () { }
+
+  componentDidMount () { }
+
+  componentWillUnmount () { }
+
+  gotoSomeWhere(url: string) {
+    Taro.navigateTo({ url })
+  }
+
+  initUlevel(mylevel?: number): QQlevel {
     const level = new QQlevel(mylevel)
     const icon = {
       crown: 'https://w-xuefeng.github.io/QQlevel/src/assets/crown.svg',
@@ -47,19 +57,9 @@ export default class YGMenu extends Component<YGMenuPropsType> {
       moon: 'https://w-xuefeng.github.io/QQlevel/src/assets/moon.svg',
       star: 'https://w-xuefeng.github.io/QQlevel/src/assets/star.svg',
     }
-    level.setIcon(icon);
-    return level;
+    level.setIcon(icon)
+    return level
   }
-
-  gotoSomeWhere (url: string) {
-    Taro.navigateTo({url})
-  }
-
-  componentWillMount () { }
-
-  componentDidMount () { }
-
-  componentWillUnmount () { }
 
   componentDidShow () { }
 

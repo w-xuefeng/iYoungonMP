@@ -32,7 +32,7 @@ export const regAccount = ({
   utype,
   wxid
 }: {
-  stuid: string,
+  stuid: string | number,
   password: string,
   name: string,
   email: string,

@@ -1,7 +1,7 @@
 import Taro from '@tarojs/taro'
 import { loginUrlTag } from './url'
-const wxToken = 'lalala'
 
+const wxToken = 'lalala'
 
 export interface HttpRequestOption {
   url: string

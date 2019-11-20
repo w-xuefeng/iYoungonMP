@@ -1,6 +1,8 @@
+const path = require('path')
+
 const config = {
   projectName: 'iyoungon',
-  date: '2019-10-5',
+  date: '2019-11-20',
   designWidth: 750,
   deviceRatio: {
     '640': 2.34 / 2,
@@ -9,6 +11,9 @@ const config = {
   },
   sourceRoot: 'src',
   outputRoot: 'dist',
+  alias: {
+    '@': path.resolve(__dirname, '..', 'src')
+  },
   plugins: {
     babel: {
       sourceMap: true,
@@ -90,8 +95,7 @@ const config = {
           }
         }
       }
-    },
-    esnextModules: ['taro-ui']
+    }
   }
 }
 

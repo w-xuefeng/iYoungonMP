@@ -1,0 +1,8 @@
+.utype-picker {
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  margin: 30px auto;
+  color: #333333;
+  font-size: 32px;
+}

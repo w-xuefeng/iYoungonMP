@@ -1,8 +1,8 @@
-@import '../../config.less';
+@import '../../config.scss';
 .header {
   height: 60px;
   padding-bottom: 30px;
-  background-image: @background-image-gradualBlue;
+  background-image: $background-image-gradualBlue;
   display: flex;
   justify-content: center;
   align-items: center;

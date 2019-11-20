@@ -3,13 +3,13 @@ import { View } from '@tarojs/components'
 import { LocalData, LDKey, accountPagePath } from '@/utils/index';
 import { User } from '@/models'
 import YGHeader from '@/components/YGHeader'
-import './index.less'
+import './index.scss'
 
 
 interface IndexPageStateType {
   user: User
 }
-export default class Index extends Component<any, IndexPageStateType> {
+export default class Index extends Component<{}, IndexPageStateType> {
 
   /**
    * 指定config的类型声明为: Taro.Config
@@ -31,7 +31,7 @@ export default class Index extends Component<any, IndexPageStateType> {
     })
   }
 
-  constructor () {
+  constructor() {
     super(...arguments)
     this.state = {
       user: new User,

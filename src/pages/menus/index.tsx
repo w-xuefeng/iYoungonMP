@@ -1,7 +1,7 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import YGMenu, { Menu, HeaderInfo } from '@/components/YGMenu'
-import './index.less'
+import './index.scss'
 
 export default class MenusPage extends Component {
 
