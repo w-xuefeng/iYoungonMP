@@ -21,7 +21,12 @@ export class YGURL {
   * @param:  { stuid, password, name, email, utype, wxid }
   */
   static post_users = `${BaseUrl}/users`
-  
+
+  /**
+  * @function: 获取注册码
+  * @method: GET
+  */
+  static get_rcode =  `${BaseUrl}/commonset/index/getrcode`
 
   /**
   * @function: 获取用户信息

@@ -1,7 +1,7 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Picker } from '@tarojs/components'
+import { View, Picker } from '@tarojs/components';
 import { AtInput, AtButton } from 'taro-ui'
-import { regAccount } from '@/api'
+import { getRegisterCode, regAccount } from '@/api'
 import { LocalData, LDKey, notEmpty, gotoIndex } from '@/utils/index'
 import './index.scss'
 
@@ -11,7 +11,7 @@ export interface YGRegisterStateType {
   password: string
   repassword: string
   email: string
-  utype: string | number
+  utype: number
   vcode: string
   utypeSelector: {
     label: string
@@ -34,7 +34,7 @@ export default class YGRegister extends Component<any, YGRegisterStateType> {
       password: '',
       repassword: '',
       email: '',
-      utype: '0',
+      utype: -1,
       vcode: '',
       utypeSelector: [
         {
@@ -56,7 +56,7 @@ export default class YGRegister extends Component<any, YGRegisterStateType> {
       ],
       utypeSelected: {
         label: '请选择',
-        value: 0
+        value: -1
       },
       isloading: false
     }
@@ -121,6 +121,12 @@ export default class YGRegister extends Component<any, YGRegisterStateType> {
     return value
   }
 
+  checkRegisterCode(vcode: string) {
+    return getRegisterCode().then(rs => {
+      return vcode === rs.Rcode;
+    })
+  }
+
   regAccount() {
     if (notEmpty([
       {
@@ -132,18 +138,26 @@ export default class YGRegister extends Component<any, YGRegisterStateType> {
         value: this.state.name
       },
       {
-        key: '密码',
-        value: this.state.password
-      },
-      {
         key: '邮箱',
         value: this.state.email
       },
       {
-        key: '用户类型',
-        value: this.state.utype
+        key: '密码',
+        value: this.state.password
+      },
+      {
+        key: '重复密码',
+        value: this.state.repassword
       }
     ])) {
+      if (this.state.utypeSelector.every(e => e.value !== this.state.utype)) {
+        Taro.showToast({
+          title: `请选择用户类型`,
+          icon: 'none',
+          duration: 2000
+        })
+        return
+      }
       if (this.state.password !== this.state.repassword) {
         Taro.showToast({
           title: `两次密码不相同`,
@@ -160,31 +174,58 @@ export default class YGRegister extends Component<any, YGRegisterStateType> {
         })
         return
       }
-      this.setState({ isloading: true })
-      const wxid = LocalData.getItem(LDKey.OPENID)
-      regAccount({
-        stuid: this.state.stuid,
-        password: this.state.password,
-        name: this.state.name,
-        email: this.state.email,
-        utype: this.state.utype,
-        wxid
-      }).then(rs => {
-        this.setState({ isloading: false })
-        if (rs && rs.status) {
-          Taro.showToast({
-            title: `注册成功`,
-            icon: 'success',
-            duration: 2000
-          })
-          LocalData.setItem(LDKey.USER, rs.resdata)
-          LocalData.setItem(LDKey.TIMESTAMP, new Date().getTime())
-          gotoIndex()
+      if (this.state.utype !== 0) {
+        if (!notEmpty([{
+          key: '注册码',
+          value: this.state.vcode
+        }])) {
+          return
         }
-      })
+        this.checkRegisterCode(this.state.vcode).then(rs => {
+          if (rs) {
+            this.toRegister()
+          } else {
+            Taro.showToast({
+              title: `注册码不正确`,
+              icon: 'none',
+              duration: 2000
+            })
+            return
+          }
+        })
+      } else {
+        this.toRegister()
+      }
     }
   }
+
+  toRegister() {
+    this.setState({ isloading: true })
+    const wxid = LocalData.getItem(LDKey.OPENID)
+    regAccount({
+      stuid: this.state.stuid,
+      password: this.state.password,
+      name: this.state.name,
+      email: this.state.email,
+      utype: this.state.utype,
+      wxid
+    }).then(rs => {
+      this.setState({ isloading: false })
+      if (rs && rs.status) {
+        Taro.showToast({
+          title: `注册成功`,
+          icon: 'success',
+          duration: 2000
+        })
+        LocalData.setItem(LDKey.USER, rs.resdata)
+        LocalData.setItem(LDKey.TIMESTAMP, new Date().getTime())
+        gotoIndex()
+      }
+    })    
+  }
+
   render() {
+    const { stuid, name, email, password, repassword, vcode, utype, isloading, utypeSelector, utypeSelected } = this.state;
     return (
       <View className='register'>
         <AtInput
@@ -192,7 +233,7 @@ export default class YGRegister extends Component<any, YGRegisterStateType> {
           title='学号'
           type='number'
           placeholder='请输入学号'
-          value={this.state.stuid}
+          value={stuid}
           maxLength={8}
           onChange={this.handleChangeStuid.bind(this)}
         />
@@ -201,7 +242,7 @@ export default class YGRegister extends Component<any, YGRegisterStateType> {
           title='姓名'
           type='text'
           placeholder='请输入姓名'
-          value={this.state.name}
+          value={name}
           onChange={this.handleChangeName.bind(this)}
         />
         <AtInput
@@ -209,7 +250,7 @@ export default class YGRegister extends Component<any, YGRegisterStateType> {
           title='邮箱'
           type='email'
           placeholder='请输入邮箱'
-          value={this.state.email}
+          value={email}
           onChange={this.handleChangeEmail.bind(this)}
         />
         <AtInput
@@ -217,7 +258,7 @@ export default class YGRegister extends Component<any, YGRegisterStateType> {
           title='密码'
           type='password'
           placeholder='请输入密码'
-          value={this.state.password}
+          value={password}
           maxLength={16}
           onChange={this.handleChangePassword.bind(this)}
         />
@@ -226,28 +267,41 @@ export default class YGRegister extends Component<any, YGRegisterStateType> {
           title='重复密码'
           type='password'
           placeholder='请重复输入密码'
-          value={this.state.repassword}
+          value={repassword}
           maxLength={16}
           onChange={this.handleChangeRepassword.bind(this)}
         />
         <View className="utype-picker">
           <Picker
             mode='selector'
-            range={this.state.utypeSelector}
+            range={utypeSelector}
             rangeKey='label'
             value={0}
             onChange={this.handleChangeUtype}
           >
             <View className='picker'>
-              用户类型：{this.state.utypeSelected.label}
+              用户类型：{utypeSelected.label}
             </View>
           </Picker>
         </View>
+        {utype === 0 || utype === -1 ? '' : (
+          <View>
+            <View className='vcode-text'>请联系网站工作人员申请注册码</View>
+            <AtInput
+              name='vcode'
+              title='注册码'
+              type='text'
+              placeholder='注册码'
+              value={vcode}
+              onChange={this.handleChangeVcode.bind(this)}
+            /> 
+          </View>
+        )}
         <AtButton
           type='primary'
           size='small'
-          loading={this.state.isloading}
-          disabled={this.state.isloading}
+          loading={isloading}
+          disabled={isloading}
           onClick={this.regAccount.bind(this)}
         >
           确定注册

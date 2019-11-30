@@ -23,6 +23,7 @@ export interface HttpResponOption {
   title?: string
   message?: string
   msg?: string
+  Rcode?: string
 }
 
 export const Req = (opt: HttpRequestOption) => {

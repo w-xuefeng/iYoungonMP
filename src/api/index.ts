@@ -48,6 +48,17 @@ export const regAccount = ({
 }
 
 /**
+ * @function 获取注册码
+ * */
+export const getRegisterCode = () => {
+  const opt: HttpRequestOption = {
+    url: YGURL.get_rcode,
+    method: 'GET'
+  }
+  return Req(opt)
+}
+
+/**
  * @function 获取用户信息
  * */ 
 export const getUserInfo = () => {
