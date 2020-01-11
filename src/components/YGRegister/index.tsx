@@ -2,7 +2,7 @@ import Taro, { Component } from '@tarojs/taro'
 import { View, Picker } from '@tarojs/components';
 import { AtInput, AtButton } from 'taro-ui'
 import { getRegisterCode, regAccount } from '@/api'
-import { LocalData, LDKey, notEmpty, gotoIndex } from '@/utils/index'
+import { LocalData, LDKey, notEmpty, gotoIndex, handelUserInfo } from '@/utils/index'
 import './index.scss'
 
 export interface YGRegisterStateType {
@@ -217,7 +217,7 @@ export default class YGRegister extends Component<any, YGRegisterStateType> {
           icon: 'success',
           duration: 2000
         })
-        LocalData.setItem(LDKey.USER, rs.resdata)
+        LocalData.setItem(LDKey.USER, handelUserInfo(rs.resdata))
         LocalData.setItem(LDKey.TIMESTAMP, new Date().getTime())
         gotoIndex()
       }

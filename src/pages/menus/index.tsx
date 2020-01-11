@@ -13,9 +13,7 @@ export default class MenusPage extends Component {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    navigationBarBackgroundColor: '#007acc',
     navigationStyle: 'custom',
-    navigationBarTitleText: 'iYoungon',
     navigationBarTextStyle: 'white'
   }
 

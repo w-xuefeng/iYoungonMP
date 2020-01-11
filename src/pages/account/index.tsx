@@ -2,7 +2,13 @@ import Taro, { Component, Config } from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { AtTabs, AtTabsPane } from 'taro-ui'
 import { getUserInfo } from '@/api'
-import { LocalData, LDKey, isDataTimeOut, gotoIndex } from '@/utils/index'
+import {
+  LocalData,
+  LDKey,
+  isDataTimeOut,
+  gotoIndex,
+  handelUserInfo
+} from "@/utils/index";
 import YGHeader from '@/components/YGHeader'
 import YGRegister from '@/components/YGRegister'
 import YGBindAccount from '@/components/YGBindAccount'
@@ -24,8 +30,6 @@ export default class AccountSetting extends Component<{}, AccountSettingStateTyp
    */
   config: Config = {
     navigationStyle: 'custom',
-    navigationBarBackgroundColor: '#007acc',
-    navigationBarTitleText: 'iYoungon',
     navigationBarTextStyle: 'white'
   }
 
@@ -61,7 +65,7 @@ export default class AccountSetting extends Component<{}, AccountSettingStateTyp
         LocalData.setItem(LDKey.OPENID, rs.openid)
         if (rs && rs.status) {
           // 用户已绑定账号
-          LocalData.setItem(LDKey.USER, rs.resdata)
+          LocalData.setItem(LDKey.USER, handelUserInfo(rs.resdata))
           LocalData.setItem(LDKey.TIMESTAMP, new Date().getTime())
           this.setState({ isBindAccount: true })
           gotoIndex()

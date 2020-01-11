@@ -20,8 +20,6 @@ export default class Index extends Component<{}, IndexPageStateType> {
    */
   config: Config = {
     navigationStyle: 'custom',
-    navigationBarBackgroundColor: '#007acc',    
-    navigationBarTitleText: 'iYoungon',
     navigationBarTextStyle: 'white'
   }
 
@@ -61,7 +59,7 @@ export default class Index extends Component<{}, IndexPageStateType> {
     const { user } = this.state
     return (
       <View className='index'>
-        <YGHeader />
+        <YGHeader index={true} />
         <View> {user.stuid} </View>
       </View>
     )

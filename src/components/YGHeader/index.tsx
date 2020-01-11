@@ -1,11 +1,13 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { AtIcon } from 'taro-ui'
+import { LocalData, LDKey } from '@/utils/index'
 import './index.scss'
 
 export interface YGHeaderPropsType {
   title?: string;
   back?: boolean;
+  index?: boolean;
 }
 
 export interface YGHeaderStateType {
@@ -15,8 +17,9 @@ export interface YGHeaderStateType {
 export default class YGHeader extends Component<YGHeaderPropsType, YGHeaderStateType> {
 
   static defaultProps: YGHeaderPropsType = {
-    title: 'iYoungon',
-    back: false
+    title: '阳光网站',
+    back: false,
+    index: false
   }
 
   constructor(props: YGHeaderPropsType) {
@@ -25,7 +28,7 @@ export default class YGHeader extends Component<YGHeaderPropsType, YGHeaderState
       statusBarHeight: '60px'
     }
   }
- 
+
   componentWillMount() {
     this.getStatusBarHeight()
   }
@@ -66,15 +69,62 @@ export default class YGHeader extends Component<YGHeaderPropsType, YGHeaderState
     )
   }
 
-  render() {
+  indexHeaderTitleView(title?: string) {
+    return (
+      <View className='index-header-title'>
+        <View className='index-header-title-left-wrap'>
+          <View className='index-head-title-left'>
+            <View className='index-head-title-left-top'></View>
+            <View className='index-head-title-left-bottom'></View>
+          </View>
+          <View className='index-head-title-left-rectangle'>
+          </View>
+        </View>
+        <View>{title}</View>
+        <View className='index-header-title-right-wrap'>
+          <View className='index-head-title-right-rectangle'>
+          </View>
+          <View className='index-head-title-right'>
+            <View className='index-head-title-right-top'></View>
+            <View className='index-head-title-right-bottom'></View>
+          </View>
+        </View>
+      </View>
+    )
+  }
+
+  indexHeaderView() {
+    const { title } = this.props
+    const { statusBarHeight } = this.state
+    const { fullhead } = LocalData.getItem(LDKey.USER)
+    return (
+      <View className='index-header' style={{ paddingTop: statusBarHeight }}>
+        <View className='headimg' style={{ backgroundImage: `url(${fullhead})` }}></View>
+        <View className='index-header-title-wrap'>
+          {this.indexHeaderTitleView(title)}
+        </View>
+      </View>
+    )
+  }
+
+  commonHeaderView() {
     const { title, back } = this.props
     const { statusBarHeight } = this.state
     return (
-      <View className='header' style={{ paddingTop: statusBarHeight}}>
+      <View className='header' style={{ paddingTop: statusBarHeight }}>
         {
           back ? this.backView() : ''
         }
         <View>{title}</View>
+      </View>
+    )
+  }
+
+  render() {
+    const { index } = this.props
+    return (
+      <View>
+        {index ? this.indexHeaderView() : this.commonHeaderView()}
       </View>
     )
   }
