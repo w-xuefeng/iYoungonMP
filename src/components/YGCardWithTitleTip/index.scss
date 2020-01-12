@@ -1,0 +1,10 @@
+.item {
+  position: relative;
+  &-tips {
+    position: absolute;
+    width: 100%;
+  }
+  &-card {
+    overflow: hidden;
+  }
+}

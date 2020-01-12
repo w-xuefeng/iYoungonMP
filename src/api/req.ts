@@ -3,13 +3,21 @@ import { loginUrlTag } from './url'
 
 const wxToken = 'lalala'
 
+function handelHeaders(opt: any) {
+  return {
+    'content-type': 'application/json',
+    'Authorization': `Bearer ${wxToken}`,
+    ...opt.header
+  }
+}
+
 export interface HttpRequestOption {
   url: string
   data?: {} | string | ArrayBuffer
   header?: {}
   method: 'OPTIONS'|'GET'|'HEAD'|'POST'|'PUT'|'DELETE'|'TRACE'|'CONNECT'
-  dataType?: string
-  responseType?: string
+  dataType?: 'json' | '其他'
+  responseType?: 'text' | 'arraybuffer'
   success?: () => {}
   fail?: () => {}
   complete?: () => {}
@@ -30,11 +38,7 @@ export const Req = (opt: HttpRequestOption) => {
   let res: HttpResponOption;
   const isLoginReq = opt.url.includes(loginUrlTag)
   if (!isLoginReq) {
-    opt.header = {
-      'content-type': 'application/json',
-      'Authorization': `Bearer ${wxToken}`,
-      ...opt.header
-    }    
+    opt.header = handelHeaders(opt)
   }
   return Taro.request(opt).then(rs => rs.data)
   .then(rs => {
@@ -60,6 +64,22 @@ export const Req = (opt: HttpRequestOption) => {
     res = { status: false, error: err }
     return res
   })
+}
+
+export const ReqAnyData = (opt: HttpRequestOption) => {
+  const isLoginReq = opt.url.includes(loginUrlTag)
+  if (!isLoginReq) {
+    opt.header = handelHeaders(opt)
+  }
+  return Taro.request(opt).then(rs => rs.data)
+  .catch(err => {
+      Taro.showToast({
+        title: '迷失在茫茫网络中...',
+        icon: 'none',
+        duration: 2000
+      })
+      return err
+    })
 }
 
 export const getCode = () => {

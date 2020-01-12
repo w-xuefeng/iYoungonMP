@@ -30,9 +30,15 @@ export class YGURL {
 
   /**
   * @function: 获取用户信息
-  * @method: get
+  * @method: GET
   * @param:  { code }  wx.login()
   */
   static get_users = `${BaseUrl}/users/get/wxlogin`
 
+
+  /**
+  * @function: 获取最新公告
+  * @method: GET
+  */
+  static get_last_notices = `${BaseUrl}/notice/get`
 }

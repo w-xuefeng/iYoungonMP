@@ -9,7 +9,7 @@ export class User {
   utypeName?: string;
   birthday?: string;
   college?: string;
-  department?: string;  
+  department?: string;
   fullhead?: string;
   head?: string;
   ifkey?: number;
@@ -28,6 +28,7 @@ export class User {
   ulevel?: number;
   wxid?: null | string;
   xgtoken?: null | string;
+  constructor() {}
 }
 
 export default User

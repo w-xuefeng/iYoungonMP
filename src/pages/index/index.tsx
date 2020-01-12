@@ -1,8 +1,9 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View } from '@tarojs/components'
-import { LocalData, LDKey, accountPagePath } from '@/utils/index';
+import { LocalData, LDKey, accountPagePath } from '@/utils/index'
 import { User } from '@/models'
 import YGHeader from '@/components/YGHeader'
+import YGLastNotice from '@/components/YGLastNotice'
 import './index.scss'
 
 
@@ -44,7 +45,7 @@ export default class Index extends Component<{}, IndexPageStateType> {
       Taro.redirectTo({
         url: accountPagePath
       })
-    }    
+    }
   }
 
   componentDidMount () {}
@@ -59,7 +60,8 @@ export default class Index extends Component<{}, IndexPageStateType> {
     const { user } = this.state
     return (
       <View className='index'>
-        <YGHeader index={true} />
+        <YGHeader index />
+        <YGLastNotice />
         <View> {user.stuid} </View>
       </View>
     )

@@ -271,7 +271,7 @@ export default class YGRegister extends Component<any, YGRegisterStateType> {
           maxLength={16}
           onChange={this.handleChangeRepassword.bind(this)}
         />
-        <View className="utype-picker">
+        <View className='utype-picker'>
           <Picker
             mode='selector'
             range={utypeSelector}

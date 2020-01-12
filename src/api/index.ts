@@ -1,9 +1,9 @@
 import { YGURL } from './url'
-import { Req, getCode, HttpRequestOption } from './req'
+import { Req, getCode, HttpRequestOption, ReqAnyData } from './req'
 
 /**
  * @function 绑定微信账号
- * */ 
+ * */
 export const bindAccount = ({
   stuid,
   password,
@@ -23,7 +23,7 @@ export const bindAccount = ({
 
 /**
  * @function 注册账号
- * */ 
+ * */
 export const regAccount = ({
   stuid,
   password,
@@ -60,7 +60,7 @@ export const getRegisterCode = () => {
 
 /**
  * @function 获取用户信息
- * */ 
+ * */
 export const getUserInfo = () => {
   return getCode().then(rs => {
     const opt: HttpRequestOption = {
@@ -70,4 +70,15 @@ export const getUserInfo = () => {
     }
     return Req(opt)
   })
+}
+
+/**
+ * @function 获取最新公告
+ * */
+export const getLastNotice = () => {
+  const opt: HttpRequestOption = {
+    url: YGURL.get_last_notices,
+    method: 'GET'
+  }
+  return ReqAnyData(opt)
 }

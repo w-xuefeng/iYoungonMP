@@ -17,7 +17,6 @@ import './index.scss'
 
 interface AccountSettingStateType {
   currentRegOrBindTabs: number
-  isBindAccount: boolean
 }
 export default class AccountSetting extends Component<{}, AccountSettingStateType> {
 
@@ -36,8 +35,7 @@ export default class AccountSetting extends Component<{}, AccountSettingStateTyp
   constructor() {
     super(...arguments)
     this.state = {
-      currentRegOrBindTabs: 0,
-      isBindAccount: true
+      currentRegOrBindTabs: 0
     }
     this.login()
   }
@@ -67,11 +65,7 @@ export default class AccountSetting extends Component<{}, AccountSettingStateTyp
           // 用户已绑定账号
           LocalData.setItem(LDKey.USER, handelUserInfo(rs.resdata))
           LocalData.setItem(LDKey.TIMESTAMP, new Date().getTime())
-          this.setState({ isBindAccount: true })
           gotoIndex()
-        } else {
-          // 用户未绑定账号
-          this.setState({ isBindAccount: false })
         }
       })
     } else {
