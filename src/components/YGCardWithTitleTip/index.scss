@@ -1,10 +1,21 @@
 .item {
+  width: 100%;
+  min-height: 100px;
   position: relative;
+  overflow: hidden;
+  margin-bottom: 30px;
   &-tips {
     position: absolute;
-    width: 100%;
+    font-size: 26px;
+    z-index: 2;
   }
   &-card {
     overflow: hidden;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 24px;
+    font-family: Arial,'Microsoft YaHei','黑体','宋体',sans-serif;
+    border: 1px solid #eee;
+    box-shadow: -2px 2px 3px rgba(0,0,0,0.4);
   }
 }

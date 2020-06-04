@@ -41,4 +41,10 @@ export class YGURL {
   * @method: GET
   */
   static get_last_notices = `${BaseUrl}/notice/get`
+
+  /**
+  * @function: 获取当前在站人员信息
+  * @method: GET
+  */
+  static get_current_online = `${BaseUrl}/users/get/online`
 }

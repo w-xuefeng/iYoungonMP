@@ -1,19 +1,15 @@
 import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import YGTipsTitle from '@/components/YGTipsTitle'
-import "./index.scss"
+import './index.scss'
 
-interface Position {
-  top?: string;
-  botttom?: string;
-  left?: string;
-  right?: string;
-}
 interface YGCardWithTitleTipPropsType {
   icon: string;
   title: string;
-  tipsPosition?: Position;
-  cardPosition?: Position;
+  tipsInnerStyle?: Record<string, string | number>;
+  tipsStyle?: Record<string, string | number>;
+  itemStyle?: Record<string, string | number>;
+  cardStyle?: Record<string, string | number>;
   cardWidth?: string;
   children?: any;
 }
@@ -21,17 +17,19 @@ export default function YGCardWithTitleTip(props: YGCardWithTitleTipPropsType) {
   const {
     icon,
     title,
-    tipsPosition = { left: '0', top: '0' },
-    cardPosition = { left: '0', top: '50px' },
+    tipsInnerStyle,
+    tipsStyle = { left: '0', top: '0' },
+    cardStyle,
+    itemStyle,
     cardWidth = '100%',
     children
   } = props;
   return (
-    <View className='item'>
-      <View className='item-tips' style={tipsPosition}>
-        <YGTipsTitle icon={icon} title={title} />
+    <View className='item' style={itemStyle}>
+      <View className='item-tips' style={tipsStyle}>
+        <YGTipsTitle icon={icon} title={title} tipsInnerStyle={tipsInnerStyle} />
       </View>
-      <View className='item-card' style={{ ...cardPosition, width: cardWidth }}>
+      <View className='item-card' style={{ ...cardStyle, width: cardWidth }}>
         {children}
       </View>
     </View>

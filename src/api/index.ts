@@ -82,3 +82,15 @@ export const getLastNotice = () => {
   }
   return ReqAnyData(opt)
 }
+
+/**
+ * @function 获取当前在站成员信息
+ * */
+export const getCurrentOnline = () => {
+  const opt: HttpRequestOption = {
+    url: YGURL.get_current_online,
+    method: 'GET'
+  }
+  return Req(opt)
+}
+

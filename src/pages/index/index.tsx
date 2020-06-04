@@ -1,14 +1,18 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { LocalData, LDKey, accountPagePath } from '@/utils/index'
-import { User } from '@/models'
+import { Notice, User, Online } from '@/models'
+import { getCurrentOnline, getLastNotice } from '@/api'
 import YGHeader from '@/components/YGHeader'
 import YGLastNotice from '@/components/YGLastNotice'
+import YGCurrentOnline from '@/components/YGCurrentOnline'
 import './index.scss'
 
 
 interface IndexPageStateType {
-  user: User
+  user: User,
+  notice: Notice,
+  currentOnline: Online[]
 }
 export default class Index extends Component<{}, IndexPageStateType> {
 
@@ -21,7 +25,9 @@ export default class Index extends Component<{}, IndexPageStateType> {
    */
   config: Config = {
     navigationStyle: 'custom',
-    navigationBarTextStyle: 'white'
+    navigationBarTextStyle: 'white',
+    backgroundColor: '#1F3BA6',
+    enablePullDownRefresh: true
   }
 
   openMenuPage = () => {
@@ -34,6 +40,14 @@ export default class Index extends Component<{}, IndexPageStateType> {
     super(...arguments)
     this.state = {
       user: new User,
+      currentOnline: [],
+      notice: {
+        nid: 0,
+        opstuid: '',
+        publishtime: '',
+        content: '',
+        publisher: ''
+      }
     }
   }
 
@@ -41,6 +55,7 @@ export default class Index extends Component<{}, IndexPageStateType> {
     const user = LocalData.getItem(LDKey.USER)
     if (user) {
       this.setState({ user })
+      this.refreshPage()
     } else {
       Taro.redirectTo({
         url: accountPagePath
@@ -56,13 +71,39 @@ export default class Index extends Component<{}, IndexPageStateType> {
 
   componentDidHide () {}
 
+  getCurrentOnline() {
+    return getCurrentOnline().then((rs: { status: boolean; resdata: Online[] | null }) => {
+      this.setState({ currentOnline: rs.resdata || [] })
+    })
+  }
+
+  getLastNotices() {
+    return getLastNotice().then(rs => {
+      this.setState({ notice: rs})
+    })
+  }
+
+  refreshPage() {
+    Promise.all([
+      this.getCurrentOnline(),
+      this.getLastNotices()
+    ]).then(() => Taro.stopPullDownRefresh())
+  }
+
+  onPullDownRefresh() {
+    this.refreshPage()
+  }
+
   render () {
-    const { user } = this.state
+    const { user, notice, currentOnline } = this.state
     return (
       <View className='index'>
         <YGHeader index />
-        <YGLastNotice />
-        <View> {user.stuid} </View>
+        <View className='main'>
+          <YGLastNotice notice={notice} />
+          <YGCurrentOnline currentOnline={currentOnline} />
+          <View> {user.stuid} </View>
+        </View>
       </View>
     )
   }

@@ -1,35 +1,23 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, RichText } from '@tarojs/components'
 import YGCardWithTitleTip from '@/components/YGCardWithTitleTip'
-import { getLastNotice } from '@/api'
 import { Notice } from '@/models';
 import './index.scss'
 
 
-export interface YGLastNoticeStateType {
+export interface YGLastNoticePropsType {
   notice: Notice
 }
 
-export default class YGLastNotice extends Component<any, YGLastNoticeStateType> {
+export default class YGLastNotice extends Component<YGLastNoticePropsType> {
 
-  constructor() {
-    super(...arguments)
-    this.state = {
-      notice: {
-        nid: 0,
-        opstuid: '',
-        publishtime: '',
-        content: '',
-        publisher: ''
-      }
-    }
+  constructor(props:YGLastNoticePropsType) {
+    super(props)
   }
 
   componentWillMount() { }
 
-  componentDidMount() {
-    this.getLastNotices()
-  }
+  componentDidMount() { }
 
   componentWillUnmount() { }
 
@@ -37,18 +25,26 @@ export default class YGLastNotice extends Component<any, YGLastNoticeStateType> 
 
   componentDidHide() { }
 
-  getLastNotices() {
-    getLastNotice().then(rs => {
-      this.setState({ notice: rs})
-    })
-  }
-
   render() {
-    const { notice } = this.state
+    const { notice } = this.props
     return (
       <View className='page'>
-        <YGCardWithTitleTip icon='alert-circle' title='最新公告'>
-          <RichText nodes={notice.content}></RichText>
+        <YGCardWithTitleTip
+          icon='alert-circle'
+          title='最新公告'
+          cardWidth='80%'
+          cardStyle={{
+            marginTop: '60rpx'
+          }}
+          itemStyle={{
+            display: 'flex',
+            justifyContent: 'flex-end'
+          }}
+        >
+          <RichText nodes={notice.content} space='nbsp'></RichText>
+        <View className='footer'>
+          {notice.publisher} 于 {notice.publishtime} 发布
+        </View>
         </YGCardWithTitleTip>
       </View>
     )
