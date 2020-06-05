@@ -1,18 +1,22 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { LocalData, LDKey, accountPagePath } from '@/utils/index'
-import { Notice, User, Online } from '@/models'
-import { getCurrentOnline, getLastNotice } from '@/api'
+import { Notice, Online, Haskey, SignRecord } from '@/models'
+import { getCurrentOnline, getLastNotice, getHaskey, getThisWeekSR, getLastWeekSR } from '@/api'
 import YGHeader from '@/components/YGHeader'
 import YGLastNotice from '@/components/YGLastNotice'
 import YGCurrentOnline from '@/components/YGCurrentOnline'
+import YGHaskey from '@/components/YGHaskey'
+import YGSignRecord from '@/components/YGSignRecord'
 import './index.scss'
 
 
 interface IndexPageStateType {
-  user: User,
   notice: Notice,
-  currentOnline: Online[]
+  currentOnline: Online[],
+  haskey: Haskey[],
+  thisweek: SignRecord[],
+  lastweek: SignRecord[]
 }
 export default class Index extends Component<{}, IndexPageStateType> {
 
@@ -39,8 +43,10 @@ export default class Index extends Component<{}, IndexPageStateType> {
   constructor() {
     super(...arguments)
     this.state = {
-      user: new User,
       currentOnline: [],
+      haskey: [],
+      thisweek: [],
+      lastweek: [],
       notice: {
         nid: 0,
         opstuid: '',
@@ -54,7 +60,6 @@ export default class Index extends Component<{}, IndexPageStateType> {
   componentWillMount () {
     const user = LocalData.getItem(LDKey.USER)
     if (user) {
-      this.setState({ user })
       this.refreshPage()
     } else {
       Taro.redirectTo({
@@ -78,15 +83,36 @@ export default class Index extends Component<{}, IndexPageStateType> {
   }
 
   getLastNotices() {
-    return getLastNotice().then(rs => {
+    return getLastNotice().then((rs: Notice) => {
       this.setState({ notice: rs})
+    })
+  }
+
+  getHaskey() {
+    return getHaskey().then((rs: { status: boolean; resdata: Haskey[] | null }) => {
+      this.setState({ haskey: rs.resdata || [] })
+    })
+  }
+
+  getThisWeekSR() {
+    getThisWeekSR().then((rs: SignRecord[]) => {
+      this.setState({ thisweek: rs})
+    })
+  }
+
+  getLastWeekSR() {
+    getLastWeekSR().then((rs: SignRecord[]) => {
+      this.setState({ lastweek: rs})
     })
   }
 
   refreshPage() {
     Promise.all([
       this.getCurrentOnline(),
-      this.getLastNotices()
+      this.getLastNotices(),
+      this.getHaskey(),
+      this.getThisWeekSR(),
+      this.getLastWeekSR()
     ]).then(() => Taro.stopPullDownRefresh())
   }
 
@@ -95,14 +121,15 @@ export default class Index extends Component<{}, IndexPageStateType> {
   }
 
   render () {
-    const { user, notice, currentOnline } = this.state
+    const { notice, currentOnline, haskey, thisweek, lastweek } = this.state
     return (
       <View className='index'>
         <YGHeader index />
         <View className='main'>
           <YGLastNotice notice={notice} />
           <YGCurrentOnline currentOnline={currentOnline} />
-          <View> {user.stuid} </View>
+          <YGHaskey haskey={haskey} />
+          <YGSignRecord thisweek={thisweek} lastweek={lastweek} />
         </View>
       </View>
     )

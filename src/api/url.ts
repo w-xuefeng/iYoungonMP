@@ -47,4 +47,22 @@ export class YGURL {
   * @method: GET
   */
   static get_current_online = `${BaseUrl}/users/get/online`
+
+  /**
+  * @function: 获取携带钥匙站员信息
+  * @method: GET
+  */
+  static get_has_key = `${BaseUrl}/users/get/haskey`
+
+  /**
+  * @function: 获取本周签到记录
+  * @method: GET
+  */
+  static get_sign_record_this_week = `${BaseUrl}/sign/record/thisweek`
+
+  /**
+  * @function: 获取上周签到记录
+  * @method: GET
+  */
+  static get_sign_record_last_week = `${BaseUrl}/sign/record/lastweek`
 }

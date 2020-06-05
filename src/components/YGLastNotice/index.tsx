@@ -11,6 +11,16 @@ export interface YGLastNoticePropsType {
 
 export default class YGLastNotice extends Component<YGLastNoticePropsType> {
 
+  static defaultProps: YGLastNoticePropsType = {
+    notice: {
+      nid: -1,
+      opstuid: '',
+      publishtime: '',
+      content: '',
+      publisher: ''
+    }
+  }
+
   constructor(props:YGLastNoticePropsType) {
     super(props)
   }
@@ -29,23 +39,28 @@ export default class YGLastNotice extends Component<YGLastNoticePropsType> {
     const { notice } = this.props
     return (
       <View className='page'>
-        <YGCardWithTitleTip
-          icon='alert-circle'
-          title='最新公告'
-          cardWidth='80%'
-          cardStyle={{
-            marginTop: '60rpx'
-          }}
-          itemStyle={{
-            display: 'flex',
-            justifyContent: 'flex-end'
-          }}
-        >
-          <RichText nodes={notice.content} space='nbsp'></RichText>
-        <View className='footer'>
-          {notice.publisher} 于 {notice.publishtime} 发布
-        </View>
-        </YGCardWithTitleTip>
+        {
+          notice.content ?
+          (
+            <YGCardWithTitleTip
+              icon='alert-circle'
+              title='最新公告'
+              cardWidth='80%'
+              cardStyle={{
+                marginTop: '60rpx'
+              }}
+              itemStyle={{
+                display: 'flex',
+                justifyContent: 'flex-end'
+              }}
+            >
+              <RichText nodes={notice.content} space='nbsp'></RichText>
+              <View className='footer'>
+                {notice.publisher} 于 {notice.publishtime} 发布
+              </View>
+            </YGCardWithTitleTip>
+          ) : ''
+        }
       </View>
     )
   }

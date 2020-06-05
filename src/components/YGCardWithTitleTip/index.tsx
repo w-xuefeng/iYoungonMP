@@ -10,6 +10,7 @@ interface YGCardWithTitleTipPropsType {
   tipsStyle?: Record<string, string | number>;
   itemStyle?: Record<string, string | number>;
   cardStyle?: Record<string, string | number>;
+  iconStyle?: Record<string, string | number>;
   cardWidth?: string;
   children?: any;
 }
@@ -18,6 +19,7 @@ export default function YGCardWithTitleTip(props: YGCardWithTitleTipPropsType) {
     icon,
     title,
     tipsInnerStyle,
+    iconStyle,
     tipsStyle = { left: '0', top: '0' },
     cardStyle,
     itemStyle,
@@ -27,7 +29,7 @@ export default function YGCardWithTitleTip(props: YGCardWithTitleTipPropsType) {
   return (
     <View className='item' style={itemStyle}>
       <View className='item-tips' style={tipsStyle}>
-        <YGTipsTitle icon={icon} title={title} tipsInnerStyle={tipsInnerStyle} />
+        <YGTipsTitle icon={icon} title={title} tipsInnerStyle={tipsInnerStyle} iconStyle={iconStyle} />
       </View>
       <View className='item-card' style={{ ...cardStyle, width: cardWidth }}>
         {children}

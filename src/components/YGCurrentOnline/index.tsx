@@ -13,7 +13,7 @@ export interface YGCurrentOnlinePropsType {
 
 export default class YGCurrentOnline extends Component<YGCurrentOnlinePropsType> {
 
-  defaultProps = {
+  static defaultProps: YGCurrentOnlinePropsType = {
     currentOnline: []
   }
   constructor(props: YGCurrentOnlinePropsType) {
@@ -44,6 +44,7 @@ export default class YGCurrentOnline extends Component<YGCurrentOnlinePropsType>
             justifyContent: 'center'
           }}
           itemStyle={{
+            marginTop: '10px',
             display: 'flex',
             justifyContent: 'center'
           }}
@@ -51,6 +52,8 @@ export default class YGCurrentOnline extends Component<YGCurrentOnlinePropsType>
             marginTop: '30rpx',
             padding: '30rpx',
             boxShadow: '2px 2px 3px rgba(0,0,0,0.4)',
+            maxHeight: '50vh',
+            overflow: 'auto'
           }}
         >
           {

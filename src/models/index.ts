@@ -1,5 +1,6 @@
 import User from './User'
 import Notice from './Notice'
-import Online from './Online'
+import Online, { SignRecord } from './Online'
+import Haskey from './Haskey'
 
-export { User, Notice, Online };
+export { User, Notice, Online, Haskey, SignRecord };

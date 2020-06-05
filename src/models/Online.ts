@@ -7,4 +7,12 @@ export class Online {
   constructor() { }
 }
 
+export class SignRecord extends Online {
+  id: number;
+  outtertime: string;
+  constructor() {
+    super()
+  }
+}
+
 export default Online
