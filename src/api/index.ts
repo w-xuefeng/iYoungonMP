@@ -116,7 +116,6 @@ export const getThisWeekSR = () => {
   return ReqAnyData(opt)
 }
 
-
 /**
  * @function 获取上周签到记录
  * */
@@ -127,4 +126,76 @@ export const getLastWeekSR = () => {
   }
   return ReqAnyData(opt);
 }
+
+/**
+ * @function 经纬度转地址
+ * */
+export const getLocation = ({ latitude, longitude }: { latitude: number, longitude: number }) => {
+  const opt: HttpRequestOption = {
+    url: `${YGURL.get_location}/?latitude=${latitude}&longitude=${longitude}&wxmp=1`,
+    method: 'GET'
+  };
+  return ReqAnyData(opt);
+}
+
+/**
+ * @function 通过学号和管理员token获取用户信息
+ * */
+export const getUserByToken = (stuid:string | number, token: string) => {
+  const opt: HttpRequestOption = {
+    url: `${YGURL.get_user_by_stuid_and_admin_token}/?stuid=${stuid}&adminToken=${token}`,
+    method: 'GET'
+  };
+  return Req(opt);
+}
+
+/**
+ * @function 获取允许签到的wifi信息
+ * */
+export const getAllowWifi = () => {
+  const opt: HttpRequestOption = {
+    url: YGURL.get_allow_wifi,
+    method: 'GET'
+  };
+  return ReqAnyData(opt);
+}
+
+/**
+ * @function 设置允许签到的wifi信息
+ * */
+export const setAllowWifi = (wifi: { wifi: string[]}) => {
+  const opt: HttpRequestOption = {
+    url: YGURL.set_allow_wifi,
+    method: 'PUT',
+    data: { wifi: JSON.stringify(wifi) }
+  };
+  return Req(opt);
+}
+
+/**
+ * @function 获取允许签到的经纬度信息
+ * */
+export const getAllowLocation = () => {
+  const opt: HttpRequestOption = {
+    url: YGURL.get_allow_longlat,
+    method: 'GET'
+  };
+  return ReqAnyData(opt);
+}
+
+/**
+ * @function 设置允许签到的经纬度信息
+ * */
+export const setAlloLocation = (latlong: {
+  lat: string | number;
+  long: string | number;
+  range: string | number;
+}) => {
+  const opt: HttpRequestOption = {
+    url: YGURL.get_allow_longlat,
+    method: "PUT",
+    data: { latlong: JSON.stringify(latlong) }
+  };
+  return Req(opt);
+};
 

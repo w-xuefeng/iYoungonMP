@@ -64,6 +64,7 @@ export default class AccountSetting extends Component<{}, AccountSettingStateTyp
         if (rs && rs.status) {
           // 用户已绑定账号
           LocalData.setItem(LDKey.USER, handelUserInfo(rs.resdata))
+          LocalData.setItem(LDKey.ONLINE, Number(rs.resdata.online) === 1)
           LocalData.setItem(LDKey.TIMESTAMP, new Date().getTime())
           gotoIndex()
         }

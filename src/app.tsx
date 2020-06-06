@@ -22,8 +22,14 @@ class App extends Component {
     pages: [
       'pages/account/index',
       'pages/index/index',
+      'pages/sign/index',
       'pages/menus/index',
     ],
+    permission: {
+      'scope.userLocation': {
+        desc: '你的位置信息将用于小程序位置接口的效果展示和签到位置的判断'
+      }
+    },
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#FFFFFF00'
@@ -41,7 +47,7 @@ class App extends Component {
           selectedIconPath: 'static/img/icon_nav_home_target.png'
         },
         {
-          pagePath: 'pages/menus/index',
+          pagePath: 'pages/sign/index',
           text: '签到',
           iconPath: 'static/img/icon_nav_sign.png',
           selectedIconPath: 'static/img/icon_nav_sign_target.png'

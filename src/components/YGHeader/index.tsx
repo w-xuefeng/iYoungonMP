@@ -58,6 +58,12 @@ export default class YGHeader extends Component<YGHeaderPropsType, YGHeaderState
     })
   }
 
+  openMenuPage = () => {
+    Taro.navigateTo({
+      url: '/pages/menus/index'
+    })
+  }
+
   backView() {
     return (
       <View
@@ -99,7 +105,7 @@ export default class YGHeader extends Component<YGHeaderPropsType, YGHeaderState
     const { fullhead } = LocalData.getItem(LDKey.USER)
     return (
       <View className='index-header' style={{ paddingTop: statusBarHeight }}>
-        <View className='headimg' style={{ backgroundImage: `url(${fullhead})` }}></View>
+        <View className='headimg' style={{ backgroundImage: `url(${fullhead})` }} onClick={this.openMenuPage}></View>
         <View className='index-header-title-wrap'>
           {this.indexHeaderTitleView(title)}
         </View>

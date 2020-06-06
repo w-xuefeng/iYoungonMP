@@ -47,7 +47,11 @@ export default class YGSignRecord extends Component<YGSignRecordPropsType, YGSig
 
   generateRecored(week: SignRecord[]) {
     return (
-      <View>
+      <View style={{
+        maxHeight: '50vh',
+        overflow: 'auto'
+      }}
+      >
         {
           week && week.length > 0 ?
             week.map((user, i) => (
@@ -103,9 +107,7 @@ export default class YGSignRecord extends Component<YGSignRecordPropsType, YGSig
           }}
           cardStyle={{
             marginTop: '30rpx',
-            padding: '30rpx',
-            maxHeight: '50vh',
-            overflow: 'auto'
+            padding: '30rpx'
           }}
         >
         <AtTabs

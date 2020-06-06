@@ -30,6 +30,18 @@ export default class YGHaskey extends Component<YGHaskeyPropsType> {
 
   componentDidHide() { }
 
+  callPhone(phoneNumber: string) {
+    if (phoneNumber) {
+      Taro.makePhoneCall({ phoneNumber })
+    } else {
+      Taro.showToast({
+        title: '该站员尚未绑定电话',
+        icon: 'none',
+        duration: 2000
+      })
+    }
+  }
+
   render() {
     const { haskey } = this.props
     return (
@@ -62,10 +74,12 @@ export default class YGHaskey extends Component<YGHaskeyPropsType> {
           {
             haskey && haskey.length > 0 ?
               haskey.map((user, i) => (
-                <View className={`line ${
-                  i === haskey.length - 1 && haskey.length % 2 !== 0
-                  || [1, 2].includes(haskey.length) ? '' : 'border-bottom'
-                }`} key={user.stuid}
+                <View
+                  onClick={() => this.callPhone(user.phone)}
+                  className={`line ${
+                    i === haskey.length - 1 && haskey.length % 2 !== 0
+                    || [1, 2].includes(haskey.length) ? '' : 'border-bottom'
+                  }`} key={user.stuid}
                 >
                   <View className='line-left'>
                     <AtAvatar image={`${YGURL.asset_url}${user.head}`} size='small'></AtAvatar>

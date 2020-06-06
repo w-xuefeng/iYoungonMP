@@ -65,4 +65,41 @@ export class YGURL {
   * @method: GET
   */
   static get_sign_record_last_week = `${BaseUrl}/sign/record/lastweek`
+
+  /**
+  * @function: 经纬度转地址
+  * @method: GET
+  */
+  static get_location = `${BaseUrl}/location/infor`
+
+  /**
+  * @function: 通过学号和管理员token获取用户信息
+  * @method: GET
+  */
+  static get_user_by_stuid_and_admin_token = `${BaseUrl}/users/get/stuid`
+
+  /**
+  * @function: 获取允许签到的 wifi 信息
+  * @method: GET
+  */
+  static get_allow_wifi = `${BaseUrl}/commonset/index/getwifi`
+
+  /**
+  * @function: 设置允许签到的 wifi 信息
+  * @method: PATCH | PUT
+  */
+  static set_allow_wifi = `${BaseUrl}/commonset/index/setwifi`
+
+  /**
+  * @function: 获取允许签到的 经纬度 信息
+  * @method: GET
+  */
+  static get_allow_longlat = `${BaseUrl}/commonset/index/getlatlongwxmp`
+
+    /**
+  * @function: 设置允许签到的 经纬度 信息
+  * @method: PATCH | PUT
+  */
+  static set_allow_longlat = `${BaseUrl}/commonset/index/setlatlongwxmp`
+
 }

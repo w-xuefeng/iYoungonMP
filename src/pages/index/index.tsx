@@ -34,12 +34,6 @@ export default class Index extends Component<{}, IndexPageStateType> {
     enablePullDownRefresh: true
   }
 
-  openMenuPage = () => {
-    Taro.navigateTo({
-      url: '/pages/menus/index'
-    })
-  }
-
   constructor() {
     super(...arguments)
     this.state = {

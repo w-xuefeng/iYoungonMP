@@ -23,6 +23,11 @@ export class LDKey {
    * 本地存储数据 用户信息 的 key
   */
   static USER = '-U-'
+
+  /**
+   * 本地存储数据 用户是否在站 的 key
+  */
+  static ONLINE = '-OL-'
 }
 
 /**
@@ -188,4 +193,39 @@ export const handelUserInfo = (user: User): User => {
     positionName: position2Name(Number(user.position))
   }
   return userHandeled
+}
+
+/**
+ * 检测分、秒是否补零
+ */
+export function checkTime (i: number | string) {
+  if (i < 10) {
+    i = `0${i}`
+  }
+  return i
+}
+
+/**
+ * 获取当前时间
+ */
+export function getNowTime () {
+  const today = new Date()
+  const weekday = new Array(7)
+  weekday[0] = '星期日'
+  weekday[1] = '星期一'
+  weekday[2] = '星期二'
+  weekday[3] = '星期三'
+  weekday[4] = '星期四'
+  weekday[5] = '星期五'
+  weekday[6] = '星期六'
+  const year = today.getFullYear()
+  const month = today.getMonth() + 1
+  const day = today.getDate()
+  const h = today.getHours()
+  let m: number | string = today.getMinutes();
+  let s: number | string = today.getSeconds();
+  m = checkTime(m)
+  s = checkTime(s)
+  let currentdate = year + '年' + month + '月' + day + '日  ' + h + ':' + m + ':' + s + '  ' + weekday[today.getDay()]
+  return currentdate
 }
