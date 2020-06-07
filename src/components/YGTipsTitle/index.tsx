@@ -12,6 +12,7 @@ interface YGTipsTitlePropsType {
   backgroundColor?: string;
   tipsInnerStyle?: Record<string, string | number>;
   iconStyle?: Record<string, string | number>;
+  onClick?: () => void;
 }
 export default function YGTipsTitle(props: YGTipsTitlePropsType) {
   const {
@@ -21,10 +22,11 @@ export default function YGTipsTitle(props: YGTipsTitlePropsType) {
     fontSize = 20,
     backgroundColor = '#fff45c',
     tipsInnerStyle,
-    iconStyle
+    iconStyle,
+    onClick
   } = props;
   return (
-    <View className='tips' style={{ fontSize, backgroundColor, ...tipsInnerStyle }}>
+    <View className='tips' style={{ fontSize, backgroundColor, ...tipsInnerStyle }} onClick={onClick}>
       <View className='tips-icon' style={iconStyle}>
         <AtIcon value={icon} size={fontSize} color={color}></AtIcon>
       </View>

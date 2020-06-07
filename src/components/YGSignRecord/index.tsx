@@ -107,7 +107,11 @@ export default class YGSignRecord extends Component<YGSignRecordPropsType, YGSig
           }}
           cardStyle={{
             marginTop: '30rpx',
-            padding: '30rpx'
+            padding: '30rpx',
+            boxShadow: '-2px 2px 3px rgba(0,0,0,0.4)',
+          }}
+          activeItemStyle={{
+            transform: 'translateX(85%)'
           }}
         >
         <AtTabs

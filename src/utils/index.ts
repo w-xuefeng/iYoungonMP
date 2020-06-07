@@ -28,6 +28,11 @@ export class LDKey {
    * 本地存储数据 用户是否在站 的 key
   */
   static ONLINE = '-OL-'
+
+  /**
+   * 本地存储数据 设备屏幕大小 的 key
+  */
+  static SCREEN = '-screen-'
 }
 
 /**
@@ -196,10 +201,10 @@ export const handelUserInfo = (user: User): User => {
 }
 
 /**
- * 检测分、秒是否补零
+ * 检测月、日、时、分、秒是否补零
  */
 export function checkTime (i: number | string) {
-  if (i < 10) {
+  if (String(i).length < 2) {
     i = `0${i}`
   }
   return i
@@ -219,13 +224,24 @@ export function getNowTime () {
   weekday[5] = '星期五'
   weekday[6] = '星期六'
   const year = today.getFullYear()
-  const month = today.getMonth() + 1
-  const day = today.getDate()
-  const h = today.getHours()
-  let m: number | string = today.getMinutes();
-  let s: number | string = today.getSeconds();
+  let month: number | string = today.getMonth() + 1
+  let day: number | string = today.getDate()
+  let h: number | string = today.getHours();
+  let m: number | string = today.getMinutes()
+  let s: number | string = today.getSeconds()
+  month = checkTime(month)
+  day = checkTime(day)
+  h = checkTime(h)
   m = checkTime(m)
   s = checkTime(s)
-  let currentdate = year + '年' + month + '月' + day + '日  ' + h + ':' + m + ':' + s + '  ' + weekday[today.getDay()]
-  return currentdate
+  const cn = year + '年' + month + '月' + day + '日  ' + h + ':' + m + ':' + s + '  ' + weekday[today.getDay()]
+  const en = `${year}-${month}-${day} ${h}:${m}:${s}`;
+  const ymd = `${year}-${month}-${day}`;
+  const hms = `${h}:${m}:${s}`;
+  return {
+    cn,
+    en,
+    ymd,
+    hms
+  }
 }

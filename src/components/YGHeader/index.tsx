@@ -38,7 +38,8 @@ export default class YGHeader extends Component<YGHeaderPropsType, YGHeaderState
   componentWillUnmount() { }
 
   getStatusBarHeight() {
-    const { statusBarHeight } = Taro.getSystemInfoSync()
+    const { statusBarHeight, screenHeight, screenWidth } = Taro.getSystemInfoSync()
+    LocalData.setItem(LDKey.SCREEN, { screenHeight, screenWidth })
     this.setState({
       statusBarHeight: `${statusBarHeight + 5}px`
     })
@@ -59,7 +60,7 @@ export default class YGHeader extends Component<YGHeaderPropsType, YGHeaderState
   }
 
   openMenuPage = () => {
-    Taro.navigateTo({
+    Taro.switchTab({
       url: '/pages/menus/index'
     })
   }

@@ -1,9 +1,18 @@
 import Taro, { Component, Config, WifiInfo } from '@tarojs/taro'
 import { View, Text, Image } from '@tarojs/components';
-import { AtFab } from 'taro-ui'
+import { AtFab, AtCard, AtLoadMore, AtButton } from 'taro-ui'
 import { LocalData, LDKey, accountPagePath, handelUserInfo, getNowTime } from '@/utils/index'
-import { User } from '@/models'
-import { getLocation, getUserInfo, getAllowWifi, getAllowLocation } from '@/api'
+import { User, SignRecord } from '@/models'
+import {
+  addDuty,
+  getLocation,
+  getUserInfo,
+  getAllowWifi,
+  signInRequest,
+  signOutRequest,
+  getAllowLocation,
+  getSignRecordByTime,
+} from '@/api'
 import YGHeader from '@/components/YGHeader'
 import './index.scss'
 
@@ -31,10 +40,15 @@ interface SystemConfig {
 
 interface UserInterface {
   loading: boolean;
+  signLoading: boolean;
+  loadMoreStatus: 'loading' | 'noMore' | 'more';
   reason: string[];
   ifkey: string[];
-  selectIndex: number;
   open: boolean;
+  menuSpace: boolean;
+  todayRecord: SignRecord[];
+  todayRecordCountPrePage: number;
+  todayRecordTotal?: number;
 }
 
 interface SignPageStateType extends CurrentState, SystemConfig, UserInterface {}
@@ -93,11 +107,16 @@ export default class Sign extends Component<{}, SignPageStateType> {
     /**
      * UserInterface UI 界面
      */
-      reason: ['请选择', '值班', '补值班', '例会', '临时进站', '自习', '其他'],
-      ifkey: ['请选择', '否', '是'],
+      reason: ['值班', '补值班', '例会', '临时进站', '自习', '其他'],
+      ifkey: ['没有携带钥匙', '携带钥匙'],
+      loadMoreStatus: 'more',
+      todayRecord: [],
+      todayRecordTotal: 0,
       loading: true,
-      selectIndex: 0,
-      open: false
+      signLoading: false,
+      open: false,
+      menuSpace: false,
+      todayRecordCountPrePage: 10
     }
   }
 
@@ -112,6 +131,10 @@ export default class Sign extends Component<{}, SignPageStateType> {
   componentDidShow () { }
 
   componentDidHide () {}
+
+  toast(title: string, icon: 'loading' | 'success' | 'none' = 'none', duration: number = 2000) {
+    Taro.showToast({ title, icon, duration })
+  }
 
   getUser() {
     const user: User = LocalData.getItem(LDKey.USER)
@@ -163,7 +186,7 @@ export default class Sign extends Component<{}, SignPageStateType> {
       },
       fail: () => {
         Taro.showToast({
-          title: '获取位置信息失败',
+          title: '(づ╥﹏╥)づ， 网络出现了一点小波动',
           icon: 'none',
           duration: 1000
         })
@@ -210,44 +233,241 @@ export default class Sign extends Component<{}, SignPageStateType> {
     })
   }
 
-  refreshPage() {
-    this.setState({ loading: true })
-    this.setState({ selectIndex: 0 })
-    this.getUser()
-    Promise.all([
-      this.checkOnline(),
-      this.getAllowWifi(),
-      this.getAllowLocation(),
-      this.getConnectedWifi(),
-      this.getCurrentLocation(),
-    ]).then(() => {
-      this.setState({ loading: false })
-      Taro.stopPullDownRefresh()
-    }).catch(() => {
-      this.setState({ loading: false })
-      Taro.stopPullDownRefresh()
+  getTodaySignRecord() {
+    return getSignRecordByTime({
+      time: getNowTime().ymd,
+      page: this.state.todayRecord.length,
+      count: this.state.todayRecordCountPrePage
+    }).then(rs => {
+      const { todayRecord } = this.state
+      rs.resdata.forEach((e: SignRecord) => {
+        if (todayRecord.every((record: SignRecord) => record.id !== e.id)) {
+          todayRecord.push(e)
+        }
+      })
+      this.setState({
+        todayRecord,
+        todayRecordTotal: rs.count,
+        loadMoreStatus: rs.count && rs.count < this.state.todayRecordCountPrePage || rs.resdata.length === 0 ? 'noMore' : 'more'
+      })
+      return rs.resdata
     })
+  }
+
+  afterSign() {
+    this.setState(
+      {
+        open: false,
+        menuSpace: false,
+        todayRecord: [],
+        loadMoreStatus: 'more',
+        loading: true
+      },
+      () => {
+        this.getUser()
+        Promise.all([
+          this.checkOnline(),
+          this.getTodaySignRecord(),
+        ]).then(() => {
+          this.setState({ loading: false })
+        }).catch(() => {
+          this.setState({ loading: false })
+        })
+      }
+     )
+  }
+
+  refreshPage() {
+    this.setState(
+      {
+        open: false,
+        menuSpace: false,
+        todayRecord: [],
+        loadMoreStatus: 'more',
+        loading: true
+      },
+      () => {
+        this.getUser()
+        Promise.all([
+          this.checkOnline(),
+          this.getAllowWifi(),
+          this.getAllowLocation(),
+          this.getConnectedWifi(),
+          this.getCurrentLocation(),
+          this.getTodaySignRecord(),
+        ]).then(() => {
+          this.setState({ loading: false })
+          Taro.stopPullDownRefresh()
+        }).catch(() => {
+          this.setState({ loading: false })
+          Taro.stopPullDownRefresh()
+        })
+      }
+     )
   }
 
   onPullDownRefresh() {
     this.refreshPage()
   }
 
-  signMenu(online: boolean) {
+  loadMore() {
+    this.setState({
+      loadMoreStatus: 'loading'
+    })
+    this.getTodaySignRecord()
+  }
+
+  signIn(item: string) {
+    const {
+      open,
+      user,
+      allowlocation,
+      allowwifi,
+      wifiInfo,
+      latitude,
+      longitude,
+      loading,
+      signLoading
+    } = this.state
+    if (loading || signLoading) {
+      this.toast('别急，数据正在拼命加载中(ง •_•)ง')
+    }
+    if (open && !loading && !signLoading) {
+      const islinkWifi = allowwifi.includes(wifiInfo ? wifiInfo.SSID : '')
+      const islat = latitude < (allowlocation.maxlat * 1) && latitude > (allowlocation.minlat * 1)
+      const islong = longitude < (allowlocation.maxlng * 1) && longitude > (allowlocation.minlng * 1)
+      if (islinkWifi || (islat && islong)) {
+        this.setState({ signLoading: true })
+        this.signInRequest(item, user)
+      } else {
+        this.toast('请在指定位置签到')
+      }
+    }
+  }
+
+  signInRequest(item: string, user: User) {
+    Taro.showLoading({
+      title: `(●'◡'●)，正在签到中...`,
+    })
+    signInRequest(user.stuid, item).then(rs => {
+      Taro.hideLoading()
+      if (rs.status) {
+        if (item.includes('值班')) {
+          this.addDuty(user.stuid)
+        } else {
+          this.toast('o(*￣▽￣*)ブ， 签到成功')
+        }
+        this.afterSign()
+        this.setOnline(true)
+      } else {
+        this.toast('(T_T)， 签到失败嘞，别灰心，再试一次')
+      }
+
+      this.setState({ signLoading: false })
+    }).catch(() => {
+      Taro.hideLoading()
+      this.toast('迷失在茫茫网络中...')
+      this.setState({ signLoading: false })
+    })
+  }
+
+  addDuty(stuid: string | number) {
+    Taro.showLoading({
+      title: `(●'◡'●)，正在添加值班记录...`,
+    })
+    addDuty(stuid, getNowTime().cn).then(rs => {
+      Taro.hideLoading()
+      if (rs.status) {
+        this.toast(`(●'◡'●)， 值班签到成功`)
+      } else {
+        this.toast('≧ ﹏ ≦， 添加值班记录失败啦')
+      }
+    }).catch (() => {
+      Taro.hideLoading()
+      this.toast('值班记录迷失在茫茫网络中...')
+    })
+  }
+
+  signOut(i: number) {
+    const { user, open, loading, signLoading } = this.state
+    if (loading || signLoading) {
+      this.toast('别急，数据正在拼命加载中(ง •_•)ง')
+    }
+    if (open && !loading && !signLoading) {
+      Taro.showLoading({
+        title: `(●'◡'●)，正在签退中...`,
+      })
+      this.setState({ signLoading: true })
+      signOutRequest(user.stuid, i).then(rs => {
+        Taro.hideLoading()
+        if (rs && rs.status) {
+          this.afterSign()
+          this.toast('o(*￣▽￣*)ブ， 签退成功')
+          this.setOnline(false)
+        } else {
+          this.toast('(；′⌒`)，签退失败啦，别灰心， 再试一次')
+        }
+        this.setState({ signLoading: false })
+      }).catch(() => Taro.hideLoading())
+    }
+  }
+
+  signMenu() {
+    const { online, reason, ifkey, signLoading, menuSpace } = this.state
+    const colorIn = ['blue', 'green', 'yellow', 'red', 'blue', 'green']
+    const colorOut = ['blue', 'green']
+    if (!menuSpace) return
+    if (online) {
+      return (
+        <View className='sign-menu-inner'>
+          {
+            ifkey.map((item: string, i: number) => (
+              <AtButton
+                loading={signLoading}
+                disabled={signLoading}
+                className={`background background-${colorOut[i]}`}
+                size='small'
+                key={i}
+                onClick={this.signOut.bind(this, i)}
+              >{item}</AtButton>
+            ))
+          }
+        </View>
+      )
+    }
     return (
-      <View>
+      <View className='sign-menu-inner'>
+        {
+          reason.map((item: string, i: number) => (
+            <AtButton
+              loading={signLoading}
+              disabled={signLoading}
+              className={`background background-${colorIn[i]}`}
+              size='small'
+              key={i}
+              onClick={this.signIn.bind(this, item)}
+            >{item}</AtButton>
+          ))
+        }
       </View>
     )
   }
 
   signBtnClick(open: boolean) {
-    this.setState({ open: !open })
+    if (open) {
+      this.setState({ open: false })
+      setTimeout(() => {
+        this.setState({ menuSpace: false })
+      }, 500)
+    } else {
+      this.setState({ menuSpace: true, open: true })
+    }
   }
 
   signUI(online: boolean, open: boolean) {
     return (
       <View className='fab-inner'>
-        <View className={`sign-menu ${open ? 'sign-menu-open' : 'sign-menu-hide'}`}>{this.signMenu(online)}</View>
+        <View className={`sign-menu ${open ? 'sign-menu-open' : 'sign-menu-hide'}`}>{this.signMenu()}</View>
         <AtFab className={`fab-inner-btn-${online ? 'out' : 'in'}`} onClick={this.signBtnClick.bind(this, open)}>
           <Text className={`at-fab__icon at-icon at-icon-${online ? 'upload' : 'download'} ${open ? 'at-icon-open' : 'at-icon-hide'}`}></Text>
           <Text className='fab-inner-btn-text'>{online ? '签退' : '签到'}</Text>
@@ -256,15 +476,96 @@ export default class Sign extends Component<{}, SignPageStateType> {
     )
   }
 
+  genList(title: string[], content: SignRecord[], loading: boolean, loadMoreStatus: 'loading' | 'noMore' | 'more') {
+    return (
+      <View className='list'>
+        <View
+          className='at-row row-sapce'
+          style={{
+            borderBottom: '1px solid #eee'
+          }}
+        >
+          {
+            title.map((item: string, i) => (
+              <View className='at-col list-title' key={i}>{item}</View>
+            ))
+          }
+        </View>
+        <View className='list-content'>
+          {
+            content && content.length > 0 ? content.map((item: SignRecord) => (
+              <View
+                className='at-row row-sapce' key={item.id}
+                style={{
+                  borderBottom: '1px solid #eee'
+                }}
+              >
+                <View className='at-col'>{item.id}</View>
+                <View className='at-col'>{item.name}</View>
+                <View className='at-col'>{item.entertime.split(' ')[1]}</View>
+                <View className='at-col'>{item.reason}</View>
+                <View className='at-col'>{item.outtertime.includes('1949-10-01') ? '' : item.outtertime.split(' ')[1]}</View>
+              </View>
+            )) : <View className='none'>{loading ? '加载中' : '暂无记录'}</View>
+          }
+          {
+            content && content.length > 0 && loadMoreStatus !== 'noMore'
+              ? (
+                <AtLoadMore
+                  className='loadmore'
+                  onClick={this.loadMore.bind(this)}
+                  status={loadMoreStatus}
+                />
+              )
+              : loadMoreStatus === 'noMore'
+              ? <View className='none-more'>已加载全部 ♪(＾∀＾●)ﾉ</View>
+              : ''
+          }
+        </View>
+      </View>
+    )
+  }
+
   render () {
-    const { loading, open, wifiInfo, latitude, longitude, address, user, reason, ifkey, online, allowlocation, allowwifi, selectIndex } = this.state
+    const {
+      /**
+       * UserInterface UI 界面
+       */
+      loading,
+      open,
+      todayRecord,
+      todayRecordTotal,
+      loadMoreStatus,
+
+      /**
+      * CurrentState 用户当前的状态
+      */
+      online,
+      address,
+      wifiInfo
+    } = this.state
+    const listTitle = ['记录编号', '姓名', '进站时间', '进站原因', '离站时间']
     return (
       <View className='index'>
         <YGHeader index />
         <View className='main'>
+          <View className='sign-main'>
+            <AtCard
+              extra={`总计：${todayRecordTotal}`}
+              title={`阳光网站 ${getNowTime().ymd} 签到表`}
+              icon={{ value: 'tag'}}
+              className='card'
+            >
+              {
+                this.genList(listTitle, todayRecord, loading, loadMoreStatus)
+              }
+              <View className='at-card__content-note footer'>
+                <Text>当前WiFi：{wifiInfo ? wifiInfo.SSID : loading ? '正在获取 wifi 信息...' : '尚未连接 wifi'}</Text>
+                <Text>当前位置：{loading ? '正在获取位置信息...' : address}</Text>
+              </View>
+            </AtCard>
+          </View>
           <Image lazyLoad mode='aspectFit' src={online ? ImageYou : ImageYoung} style={{ width: '160px', position: 'fixed', bottom: '20px' }} />
-          <Text>当前WiFi：{wifiInfo ? wifiInfo.SSID : loading ? '正在获取 wifi 信息...' : '尚未连接 wifi'}</Text>
-          <Text>当前位置：{loading ? '正在获取位置信息...' : address}</Text>
           <View className='fab'>{this.signUI(online, open) }</View>
         </View>
       </View>

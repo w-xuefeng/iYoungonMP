@@ -52,12 +52,12 @@ class App extends Component {
           iconPath: 'static/img/icon_nav_sign.png',
           selectedIconPath: 'static/img/icon_nav_sign_target.png'
         },
-        // {
-        //   pagePath: 'pages/record/index',
-        //   text: '签到记录',
-        //   iconPath: 'static/img/icon_nav_record.png',
-        //   selectedIconPath: 'static/img/icon_nav_record_target.png'
-        // }
+        {
+          pagePath: 'pages/menus/index',
+          text: '我的',
+          iconPath: 'static/img/icon_nav_my.png',
+          selectedIconPath: 'static/img/icon_nav_my_target.png'
+        }
       ]
     }
   }

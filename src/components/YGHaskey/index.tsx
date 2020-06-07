@@ -70,6 +70,9 @@ export default class YGHaskey extends Component<YGHaskeyPropsType> {
             display: 'flex',
             flexWrap: 'wrap'
           }}
+          activeItemStyle={{
+            transform: 'translateX(-75%)'
+          }}
         >
           {
             haskey && haskey.length > 0 ?

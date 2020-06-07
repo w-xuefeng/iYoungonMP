@@ -48,6 +48,9 @@ export default class YGCurrentOnline extends Component<YGCurrentOnlinePropsType>
             display: 'flex',
             justifyContent: 'center'
           }}
+          activeItemStyle={{
+            transform: 'rotate(-90deg) translateY(210%)'
+          }}
           cardStyle={{
             marginTop: '30rpx',
             padding: '30rpx',

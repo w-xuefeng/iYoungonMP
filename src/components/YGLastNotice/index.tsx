@@ -47,11 +47,15 @@ export default class YGLastNotice extends Component<YGLastNoticePropsType> {
               title='最新公告'
               cardWidth='80%'
               cardStyle={{
-                marginTop: '60rpx'
+                marginTop: '60rpx',
+                boxShadow: '-2px 2px 3px rgba(0,0,0,0.4)',
               }}
               itemStyle={{
                 display: 'flex',
                 justifyContent: 'flex-end'
+              }}
+              activeItemStyle={{
+                transform: 'rotate(90deg) translate(36%, 200%)'
               }}
             >
               <RichText nodes={notice.content} space='nbsp'></RichText>

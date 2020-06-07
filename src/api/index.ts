@@ -193,9 +193,63 @@ export const setAlloLocation = (latlong: {
 }) => {
   const opt: HttpRequestOption = {
     url: YGURL.get_allow_longlat,
-    method: "PUT",
+    method: 'PUT',
     data: { latlong: JSON.stringify(latlong) }
   };
   return Req(opt);
 };
 
+/**
+ * @function 获取某一时间的签到记录
+ * */
+export const getSignRecordByTime = ({
+  time,
+  page,
+  count
+}: {
+  time: string;
+  page: number;
+  count: number;
+}) => {
+  const opt: HttpRequestOption = {
+    url: `${YGURL.get_sign_record_by_time}/?time=${time}&page=${page}&count=${count}`,
+    method: 'GET'
+  };
+  return Req(opt);
+};
+
+/**
+ * @function 签到
+ * */
+export const signInRequest = (stuid: number | string, reason: string) => {
+  const opt: HttpRequestOption = {
+    url: YGURL.post_sign_in,
+    method: 'POST',
+    data: { stuid, reason }
+  };
+  return Req(opt);
+};
+
+/**
+ * @function 签退
+ * */
+export const signOutRequest = (stuid: number | string, ifkey: number) => {
+  const opt: HttpRequestOption = {
+    url: YGURL.post_sign_out,
+    method: 'POST',
+    data: { stuid, ifkey }
+  };
+  return Req(opt);
+};
+
+/**
+ * @function 添加值班记录
+ * */
+export const addDuty = (stuid: number | string, dutydate: string) => {
+  const opt: HttpRequestOption = {
+    url: YGURL.post_update_duty,
+    method: 'POST',
+    data: { stuid, dutydate }
+  };
+  return Req(opt);
+};

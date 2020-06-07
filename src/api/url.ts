@@ -74,6 +74,7 @@ export class YGURL {
 
   /**
   * @function: 通过学号和管理员token获取用户信息
+  * @param: { stuid, adminToken }
   * @method: GET
   */
   static get_user_by_stuid_and_admin_token = `${BaseUrl}/users/get/stuid`
@@ -86,6 +87,7 @@ export class YGURL {
 
   /**
   * @function: 设置允许签到的 wifi 信息
+  * @param: { wifi }
   * @method: PATCH | PUT
   */
   static set_allow_wifi = `${BaseUrl}/commonset/index/setwifi`
@@ -96,10 +98,39 @@ export class YGURL {
   */
   static get_allow_longlat = `${BaseUrl}/commonset/index/getlatlongwxmp`
 
-    /**
-  * @function: 设置允许签到的 经纬度 信息
+  /**
+  * @function: 设置允许签到的 经纬度 信息  * 
+  * @param: { latlong }
   * @method: PATCH | PUT
   */
   static set_allow_longlat = `${BaseUrl}/commonset/index/setlatlongwxmp`
+
+  /**
+  * @function: 获取某一时间的签到记录
+  * @param: { time, page, count }
+  * @method: GET
+  */
+  static get_sign_record_by_time = `${BaseUrl}/sign/record/time`
+
+  /**
+  * @function: 签到
+  * @param: { stuid, reason }
+  * @method: POST | PATCH
+  */
+  static post_sign_in = `${BaseUrl}/sign/patch/in`
+
+  /**
+  * @function: 签退
+  * @param: { stuid, ifkey }
+  * @method: POST | PATCH
+  */
+  static post_sign_out = `${BaseUrl}/sign/patch/out`
+
+  /**
+  * @function: 添加值班记录
+  * @param: { stuid, dutydate }
+  * @method: POST
+  */
+  static post_update_duty = `${BaseUrl}/duty/index/updateduty`
 
 }
