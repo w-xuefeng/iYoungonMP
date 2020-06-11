@@ -1,6 +1,7 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import { AtAvatar, AtIcon } from 'taro-ui'
+import { signDetailPagePath } from '@/utils'
 import YGCardWithTitleTip from '@/components/YGCardWithTitleTip'
 import { Online } from '@/models';
 import { YGURL } from '@/api/url'
@@ -29,6 +30,11 @@ export default class YGCurrentOnline extends Component<YGCurrentOnlinePropsType>
   componentDidShow() { }
 
   componentDidHide() { }
+
+  gotoSignDetail(detail: Online) {
+    this.$preload(detail)
+    Taro.navigateTo({ url: signDetailPagePath })
+  }
 
   render() {
     const { currentOnline } = this.props
@@ -65,6 +71,7 @@ export default class YGCurrentOnline extends Component<YGCurrentOnlinePropsType>
                 <View className={`line ${
                   i === currentOnline.length - 1 || currentOnline.length === 1 ? '' : 'border-bottom'
                 }`} key={user.stuid}
+                  onClick={this.gotoSignDetail.bind(this, user)}
                 >
                   <View className='line-left'>
                     <AtAvatar image={`${YGURL.asset_url}${user.head}`} size='small'></AtAvatar>

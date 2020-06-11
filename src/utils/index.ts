@@ -92,6 +92,11 @@ export const indexPagePath = '/pages/index/index'
 export const accountPagePath = '/pages/account/index'
 
 /**
+ * 签到详情页面地址
+ */
+export const signDetailPagePath = '/pages/signdetail/index'
+
+/**
  * 判断不为空
  */
 export const notEmpty = (arrs: { key: string, value: string | number }[]) => {
@@ -192,13 +197,48 @@ export const sex2Name = (sex: number): string => {
 export const handelUserInfo = (user: User): User => {
   const userHandeled: User = {
     ...user,
+    photo: user.photo && user.photo.replace(/\\/, '/'),
+    department: user.department || '天商人',
     fullhead: `${YGURL.asset_url}${user.head}`,
     sexName: sex2Name(Number(user.sex)),
     utypeName: utype2Name(Number(user.utype)),
     positionName: position2Name(Number(user.position))
-  }
+  };
   return userHandeled
 }
+
+
+/**
+ * 部门颜色
+ */
+export const transDepartMentColor = (department: string) => {
+  let color = '#2196F3'
+  switch (department) {
+    case '开发部': color = '#2196F3'
+    break
+    case '企划部': color = '#9C7DCF'
+    break
+    case '信息部': color = '#FFA500'
+    break
+    case '运营部': color = '#4CAF50'
+    break
+    case '实习站员': color = '#008B8B'
+    break
+    case '天商人': color = '#2db7f5'
+    break   
+    default: color = '#2196F3'
+  }
+  return color
+}
+
+/**
+ * 对象转 Query 字符串 并过滤空值
+ */
+export const toQuery = (data: Record<string, string | number | boolean>) =>
+  Object.entries(data)
+    .filter(e => String(e[1]).trim() !== '')
+    .map(e => `${e[0]}=${e[1]}`)
+    .join('&');
 
 /**
  * 检测月、日、时、分、秒是否补零

@@ -255,6 +255,7 @@ export default class Sign extends Component<{}, SignPageStateType> {
   }
 
   afterSign() {
+    Taro.eventCenter.trigger('signEvent')
     this.setState(
       {
         open: false,
@@ -347,7 +348,7 @@ export default class Sign extends Component<{}, SignPageStateType> {
 
   signInRequest(item: string, user: User) {
     Taro.showLoading({
-      title: `(●'◡'●)，正在签到中...`,
+      title: `(●'◡'●)，签到中...`,
     })
     signInRequest(user.stuid, item).then(rs => {
       Taro.hideLoading()
@@ -373,7 +374,7 @@ export default class Sign extends Component<{}, SignPageStateType> {
 
   addDuty(stuid: string | number) {
     Taro.showLoading({
-      title: `(●'◡'●)，正在添加值班记录...`,
+      title: `(●'◡'●)，耐心...`,
     })
     addDuty(stuid, getNowTime().cn).then(rs => {
       Taro.hideLoading()
@@ -395,7 +396,7 @@ export default class Sign extends Component<{}, SignPageStateType> {
     }
     if (open && !loading && !signLoading) {
       Taro.showLoading({
-        title: `(●'◡'●)，正在签退中...`,
+        title: `(●'◡'●)，签退中...`,
       })
       this.setState({ signLoading: true })
       signOutRequest(user.stuid, i).then(rs => {
@@ -427,7 +428,7 @@ export default class Sign extends Component<{}, SignPageStateType> {
                 disabled={signLoading}
                 className={`background background-${colorOut[i]}`}
                 size='small'
-                key={i}
+                key={item}
                 onClick={this.signOut.bind(this, i)}
               >{item}</AtButton>
             ))
@@ -444,7 +445,7 @@ export default class Sign extends Component<{}, SignPageStateType> {
               disabled={signLoading}
               className={`background background-${colorIn[i]}`}
               size='small'
-              key={i}
+              key={item}
               onClick={this.signIn.bind(this, item)}
             >{item}</AtButton>
           ))
@@ -486,8 +487,8 @@ export default class Sign extends Component<{}, SignPageStateType> {
           }}
         >
           {
-            title.map((item: string, i) => (
-              <View className='at-col list-title' key={i}>{item}</View>
+            title.map((item: string) => (
+              <View className='at-col list-title' key={item}>{item}</View>
             ))
           }
         </View>
@@ -517,7 +518,7 @@ export default class Sign extends Component<{}, SignPageStateType> {
                   status={loadMoreStatus}
                 />
               )
-              : loadMoreStatus === 'noMore'
+              : content && content.length > 0 && loadMoreStatus === 'noMore'
               ? <View className='none-more'>已加载全部 ♪(＾∀＾●)ﾉ</View>
               : ''
           }

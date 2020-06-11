@@ -24,6 +24,7 @@ class App extends Component {
       'pages/index/index',
       'pages/sign/index',
       'pages/menus/index',
+      'pages/signdetail/index'
     ],
     permission: {
       'scope.userLocation': {

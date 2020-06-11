@@ -1,6 +1,7 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import { AtAvatar, AtIcon, AtTabs, AtTabsPane  } from 'taro-ui'
+import { signDetailPagePath } from '@/utils'
 import YGCardWithTitleTip from '@/components/YGCardWithTitleTip'
 import { SignRecord } from '@/models';
 import { YGURL } from '@/api/url'
@@ -45,6 +46,11 @@ export default class YGSignRecord extends Component<YGSignRecordPropsType, YGSig
     })
   }
 
+  gotoSignDetail(detail: SignRecord) {
+    this.$preload(detail)
+    Taro.navigateTo({ url: signDetailPagePath })
+  }
+
   generateRecored(week: SignRecord[]) {
     return (
       <View style={{
@@ -58,6 +64,7 @@ export default class YGSignRecord extends Component<YGSignRecordPropsType, YGSig
               <View className={`line ${
                   i === week.length - 1 || week.length === 1 ? '' : 'border-bottom'
                 }`} key={user.stuid}
+                onClick={this.gotoSignDetail.bind(this, user)}
               >
                 <View className='line-left'>
                   <AtAvatar image={`${YGURL.asset_url}${user.head}`} size='small'></AtAvatar>
@@ -108,7 +115,7 @@ export default class YGSignRecord extends Component<YGSignRecordPropsType, YGSig
           cardStyle={{
             marginTop: '30rpx',
             padding: '30rpx',
-            boxShadow: '-2px 2px 3px rgba(0,0,0,0.4)',
+            boxShadow: '2px 2px 3px rgba(0,0,0,0.4)',
           }}
           activeItemStyle={{
             transform: 'translateX(85%)'
