@@ -1,0 +1,111 @@
+[
+  {
+    "title": "我在天商",
+    "auth": [0, 1, 2, 3, 4, 5],
+    "menus": [
+      {
+        "name": "个人中心",
+        "url": "/pages/personal/index",
+        "icon": "user"
+      },
+      {
+        "name": "我的简历",
+        "url": "/pages/resume/index",
+        "icon": "user"
+      }
+    ]
+  },
+  {
+    "title": "我在 Youngon",
+    "auth": [1, 2, 3, 4, 5],
+    "menus": [
+      {
+        "name": "近期公告",
+        "url": "/pages/notice/index",
+        "icon": "clock"
+      },
+      {
+        "name": "我的值班",
+        "url": "/pages/duty/myduty",
+        "icon": "clock"
+      },
+      {
+        "name": "值班表",
+        "url": "/pages/duty/downloaddutylist",
+        "icon": "alert-circle"
+      },
+      {
+        "name": "提出申请",
+        "url": "/pages/apply/index",
+        "icon": "message"
+      },
+      {
+        "name": "我的申请",
+        "url": "/pages/apply/myapply",
+        "icon": "alert-circle"
+      }
+    ]
+  },
+  {
+    "title": "我是站务",
+    "auth": [4, 5],
+    "menus": [
+      {
+        "name": "发布公告",
+        "url": "/pages/notice/post",
+        "icon": "clock"
+      },
+      {
+        "name": "申请列表",
+        "url": "/pages/apply/list",
+        "icon": "clock"
+      },
+      {
+        "name": "自动查值班",
+        "url": "/pages/duty/autoquery",
+        "icon": "message"
+      },
+      {
+        "name": "安排值班",
+        "url": "/pages/duty/modifyduty",
+        "icon": "alert-circle"
+      },
+      {
+        "name": "用户管理",
+        "url": "/pages/usermanager/index",
+        "icon": "alert-circle"
+      }
+    ]
+  },
+  {
+    "title": "我是超管",
+    "auth": [5],
+    "menus": [
+      {
+        "name": "网站WIFI设置",
+        "url": "/pages/supermanager/wifioption",
+        "icon": "clock"
+      },
+      {
+        "name": "网站位置设置",
+        "url": "/pages/supermanager/locationlimit",
+        "icon": "clock"
+      },
+      {
+        "name": "站员注册码设置",
+        "url": "/pages/supermanager/registercode",
+        "icon": "message"
+      },
+      {
+        "name": "设置管理员",
+        "url": "/pages/supermanager/addmanager",
+        "icon": "alert-circle"
+      },
+      {
+        "name": "删除管理员",
+        "url": "/pages/supermanager/delmanager",
+        "icon": "alert-circle"
+      }
+    ]
+  }
+]

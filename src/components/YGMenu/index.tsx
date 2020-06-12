@@ -1,6 +1,7 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text } from '@tarojs/components'
-import { AtIcon } from 'taro-ui'
+import { View } from '@tarojs/components'
+import { AtGrid } from 'taro-ui'
+import { AtGridItem } from 'taro-ui/types/grid'
 import './index.scss'
 
 export interface Menu {
@@ -10,8 +11,14 @@ export interface Menu {
   data?: any;
 }
 
-export interface YGMenuPropsType {
+export interface MenuGroup {
+  title: string;
+  auth: string[] | number[];
   menus: Menu[];
+}
+
+export interface YGMenuPropsType {
+  menus: MenuGroup[];
 }
 
 export default class YGMenu extends Component<YGMenuPropsType> {
@@ -38,23 +45,34 @@ export default class YGMenu extends Component<YGMenuPropsType> {
     Taro.navigateTo({ url })
   }
 
+  genMenu(menugroup: MenuGroup): AtGridItem[] {
+    const { menus } = menugroup
+    return menus.map(e => (
+      {
+        value: e.name,
+        iconInfo: {
+          value: e.icon
+        }
+      }
+    ))
+  }
+
   render () {
     const { menus } = this.props
     return (
       <View className='content'>
         {
-          menus.map(e => (
-            <View
-              key={e.url}
-              className='menu-item'
-              hoverClass='menu-item-hover'
-              onClick={() => this.gotoSomeWhere(e.url)}
-            >
-              <View className='menu-item-content'>
-                <AtIcon value={e.icon} size='20' color='#3f536e'></AtIcon>
-                <Text className='menu-item-name ml-30'>{e.name}</Text>
+          menus.map(menu => (
+            <View key={menu.title}>
+              <View className='at-row menugroup-title'>
+                {menu.title}
               </View>
-              <AtIcon value='chevron-right' size='14' color='#3f536e'></AtIcon>
+              <View className='at-row'>
+                <AtGrid
+                  hasBorder={false}
+                  data={this.genMenu(menu)}
+                />
+              </View>
             </View>
           ))
         }

@@ -1,10 +1,11 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, RichText, Text, Image } from '@tarojs/components'
-import YGMenu, { Menu } from '@/components/YGMenu'
+import YGMenu from '@/components/YGMenu'
 import { AtAvatar } from 'taro-ui'
 import { LocalData, LDKey, accountPagePath, transDepartMentColor } from '@/utils/index'
+import menus from '@/pages/menus/menu.json'
 import { User } from '@/models'
-import QQlevel from 'qqlevel';
+import QQlevel from 'qqlevel'
 import './index.scss'
 
 export interface HeaderInfo {
@@ -39,29 +40,6 @@ export default class MenusPage extends Component<{}, YGMyStateType> {
     cover: 'rgba(56, 56, 56, 0.45)',
     img: ''
   }
-
-  menus: Menu[] = [
-    {
-      name: '个人中心',
-      url: '/pages/index/index',
-      icon: 'user',
-    },
-    {
-      name: '我的值班',
-      url: '/pages/index/index',
-      icon: 'clock',
-    },
-    {
-      name: '提出申请',
-      url: '/pages/index/index',
-      icon: 'message',
-    },
-    {
-      name: '我的申请',
-      url: '/pages/index/index',
-      icon: 'alert-circle',
-    },      
-  ]
 
   constructor() {
     super(...arguments)
@@ -130,14 +108,28 @@ export default class MenusPage extends Component<{}, YGMyStateType> {
       fullhead,
       name,
       sex,
-      department = '',
+      positionName,
+      department = '天商人',
       utypeName,
-      positionName,      
-      position = 0,
+      signcount = 0,
       ulevel = 0
     } = user
     const level = this.initUlevel(ulevel)
-    return (      
+    const extraInfo = [
+      {
+        title: '签到次数',
+        value: signcount
+      },
+      {
+        title: '所在部门',
+        value: department
+      },
+      {
+        title: '当前职位',
+        value: positionName
+      }
+    ]
+    return (
         <View
           className='header'
           style={
@@ -184,13 +176,25 @@ export default class MenusPage extends Component<{}, YGMyStateType> {
                 }
               </View>
             </View>
+            <View className='extra-content'>
+              {
+                extraInfo.map((item, i) => (
+                  <View
+                    key={item.title}
+                    className={`item${ i === extraInfo.length - 1 ? '' : ' item-border' }`}
+                  >
+                    <View className='value'>{item.value}</View>
+                    <View className='title'>{item.title}</View>
+                  </View>
+                ))
+              }
+            </View>
           </View>
         </View>
     )
   }
 
   render () {
-    const { menus } = this
     return (
       <View className='index'>
         {this.genHeader()}
