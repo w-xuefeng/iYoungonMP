@@ -13,7 +13,6 @@
     "experimentalDecorators": true,
     "noImplicitAny": false,
     "allowSyntheticDefaultImports": true,
-    "resolveJsonMoudle": true,
     "outDir": "lib",
     "noUnusedLocals": true,
     "noUnusedParameters": true,

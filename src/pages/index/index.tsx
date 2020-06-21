@@ -123,7 +123,7 @@ export default class Index extends Component<{}, IndexPageStateType> {
     return (
       <View className='index'>
         <YGHeader index />
-        <View className='main'>
+        <View className='main yg-background'>
           <YGLastNotice notice={notice} />
           <YGCurrentOnline currentOnline={currentOnline} />
           <YGHaskey haskey={haskey} />

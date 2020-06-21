@@ -75,7 +75,7 @@ export default class SignDetail extends Component<{}, Partial<SignRecord>> {
     return (
       <View className='index'>
         <YGHeader back title='签到详情' />
-        <View className='main'>
+        <View className='main yg-background'>
           <YGCardWithTitleTip
             icon='user'
             title={`${name} 签到详情`}

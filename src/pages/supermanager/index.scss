@@ -1,0 +1,104 @@
+@import '~@/background.scss';
+
+page {
+  height: 100%;
+}
+.index {
+  color: black;
+  font-size: 36px;
+  height: 100%;
+  overflow: hidden;
+  .main {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding-bottom: 25%;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+    .curwifi {
+      font-size: 20px;
+      color: #FFFFFF;
+      background-color: #333333;
+      padding: 20px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .btn {
+      width: 90%;
+      margin: 10px auto;
+      background-color: #007ACC;
+      color: #FFFFFF;
+    }
+    .loading {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+.span {
+  animation-name: spanner;
+  animation-duration: 1000ms;
+  animation-iteration-count: infinite;
+}
+
+@keyframes spanner {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(90deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  75% {
+    transform: rotate(270deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.page {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+  .row {
+    width: 100%;
+    display: flex;
+    margin: 10px 0;
+    align-items: center;
+    .input {
+      border-bottom: 1px solid #aaa;
+      &-inner {
+        margin: 0 5px;
+        &-text {
+          font-size: 24px;
+        }
+      }
+    }
+    .col {
+      &-1 {
+        flex: 1;
+      }
+      &-2 {
+        flex: 2;
+      }
+      &-3 {
+        flex: 3;
+      }
+      &-4 {
+        flex: 4;
+      }
+      &-5 {
+        flex: 5;
+      }
+    }
+  }
+}

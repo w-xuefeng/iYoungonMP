@@ -549,7 +549,7 @@ export default class Sign extends Component<{}, SignPageStateType> {
     return (
       <View className='index'>
         <YGHeader index />
-        <View className='main'>
+        <View className='main yg-background'>
           <View className='sign-main'>
             <AtCard
               extra={`总计：${todayRecordTotal}`}

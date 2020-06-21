@@ -19,12 +19,14 @@ export interface MenuGroup {
 
 export interface YGMenuPropsType {
   menus: MenuGroup[];
+  utype: number;
 }
 
 export default class YGMenu extends Component<YGMenuPropsType> {
 
   static defaultProps: YGMenuPropsType = {
-    menus: []
+    menus: [],
+    utype: 0
   }
 
   constructor (props: YGMenuPropsType) {
@@ -50,6 +52,7 @@ export default class YGMenu extends Component<YGMenuPropsType> {
     return menus.map(e => (
       {
         value: e.name,
+        url: e.url,
         iconInfo: {
           value: e.icon
         }
@@ -57,23 +60,31 @@ export default class YGMenu extends Component<YGMenuPropsType> {
     ))
   }
 
+  handleClick(item: Menu) {
+    const { url } = item
+    this.gotoSomeWhere(url)
+  }
+
   render () {
-    const { menus } = this.props
+    const { menus, utype } = this.props
     return (
       <View className='content'>
         {
           menus.map(menu => (
-            <View key={menu.title}>
-              <View className='at-row menugroup-title'>
-                {menu.title}
+            menu.auth.includes(utype as never) ? (
+              <View key={menu.title}>
+                <View className='at-row menugroup-title'>
+                  {menu.title}
+                </View>
+                <View className='at-row'>
+                  <AtGrid
+                    onClick={this.handleClick.bind(this)}
+                    hasBorder={false}
+                    data={this.genMenu(menu)}
+                  />
+                </View>
               </View>
-              <View className='at-row'>
-                <AtGrid
-                  hasBorder={false}
-                  data={this.genMenu(menu)}
-                />
-              </View>
-            </View>
+            ) : ''
           ))
         }
       </View>

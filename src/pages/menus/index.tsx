@@ -195,11 +195,12 @@ export default class MenusPage extends Component<{}, YGMyStateType> {
   }
 
   render () {
+    const { utype } = this.state.user
     return (
       <View className='index'>
         {this.genHeader()}
         <View className='main'>
-          <YGMenu menus={menus}></YGMenu>
+          <YGMenu menus={menus} utype={utype}></YGMenu>
         </View>
       </View>
     )

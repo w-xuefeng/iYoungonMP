@@ -24,7 +24,8 @@ class App extends Component {
       'pages/index/index',
       'pages/sign/index',
       'pages/menus/index',
-      'pages/signdetail/index'
+      'pages/signdetail/index',
+      'pages/supermanager/wifioption'
     ],
     permission: {
       'scope.userLocation': {

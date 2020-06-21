@@ -8,6 +8,7 @@ export interface YGHeaderPropsType {
   title?: string;
   back?: boolean;
   index?: boolean;
+  background?: string;
 }
 
 export interface YGHeaderStateType {
@@ -115,10 +116,14 @@ export default class YGHeader extends Component<YGHeaderPropsType, YGHeaderState
   }
 
   commonHeaderView() {
-    const { title, back } = this.props
+    const { title, back, background = '' } = this.props
     const { statusBarHeight } = this.state
+    const style: React.CSSProperties = { paddingTop: statusBarHeight }
+    if (background) {
+      style.background = background
+    }
     return (
-      <View className='header' style={{ paddingTop: statusBarHeight }}>
+      <View className='header' style={style}>
         {
           back ? this.backView() : ''
         }
