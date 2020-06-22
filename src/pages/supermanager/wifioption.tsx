@@ -2,7 +2,6 @@ import Taro, { Component, Config, WifiInfo } from '@tarojs/taro'
 import { View, Input } from '@tarojs/components'
 import { getAllowWifi, setAllowWifi } from '@/api'
 import YGHeader from '@/components/YGHeader'
-// import YGWifiInput from '@/components/YGWifiInput'
 import { AtButton, AtIcon } from 'taro-ui'
 import './index.scss'
 
@@ -108,10 +107,16 @@ export default class WifiOptions extends Component<{}, {
     setAllowWifi({ wifi }).then(rs => {
       if (rs.status) {
         Taro.showToast({
-          title: 'WIFI 更新成功',
+          title: 'WIFI 信息更新成功',
           icon: 'success',
           duration: 2000
-        })        
+        })
+      } else {
+        Taro.showToast({
+          title: 'WIFI 信息未修改',
+          icon: 'none',
+          duration: 2000
+        })
       }
       this.setState({ btnloading: false })
     })
@@ -181,9 +186,9 @@ export default class WifiOptions extends Component<{}, {
         <View className='main'>
           {loading ? (
             <View className='loading'>
-              <View style='display: flex;margin: 0 auto;'>
-                <AtIcon value='loading-3' size='20' color='#333' className='span'></AtIcon>
-                <View className='at-col'>加载中...</View>
+              <View style='display: flex;margin: 0 auto;align-items:center;'>
+                <AtIcon value='loading-3' size='25' color='#333' className='span'></AtIcon>
+                <View className='at-col ml-10'>加载中...</View>
               </View>
             </View>
           ) : (

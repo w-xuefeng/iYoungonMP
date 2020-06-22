@@ -17,6 +17,7 @@ page {
     flex-direction: column;
     overflow-x: hidden;
     overflow-y: auto;
+    .curlocation,
     .curwifi {
       font-size: 20px;
       color: #FFFFFF;
@@ -101,4 +102,8 @@ page {
       }
     }
   }
+}
+
+.ml-10 {
+  margin-left: 10px;
 }

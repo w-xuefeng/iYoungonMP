@@ -99,11 +99,24 @@ export class YGURL {
   static get_allow_longlat = `${BaseUrl}/commonset/index/getlatlongwxmp`
 
   /**
-  * @function: 设置允许签到的 经纬度 信息  * 
+  * @function: 设置允许签到的 经纬度 信息
   * @param: { latlong }
   * @method: PATCH | PUT
   */
   static set_allow_longlat = `${BaseUrl}/commonset/index/setlatlongwxmp`
+
+  /**
+  * @function: 获取站员注册码
+  * @method: GET
+  */
+  static get_reg_code = `${BaseUrl}/commonset/index/getrcode`
+
+  /**
+  * @function: 设置站员注册码
+  * @param: { Rcode }
+  * @method: PATCH | PUT
+  */
+  static set_reg_code = `${BaseUrl}/commonset/index/setrcode`
 
   /**
   * @function: 获取某一时间的签到记录

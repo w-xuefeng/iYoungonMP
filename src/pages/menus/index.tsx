@@ -161,9 +161,6 @@ export default class MenusPage extends Component<{}, YGMyStateType> {
                     <Text>{name}</Text>
                     <View style='margin: 0 5px'>{ this.sex(Number(sex)) }</View>
                   </View>
-                  <View className='level-btn ml-20'>
-                    YGLV {ulevel}
-                  </View>
                   <View className='level-btn ml-20' style={{ background: transDepartMentColor(department)}}>
                     {department}
                   </View>
@@ -171,9 +168,21 @@ export default class MenusPage extends Component<{}, YGMyStateType> {
                     {utypeName}
                   </View>
                 </View>
-                {
-                  ulevel === 0 ? '' : <RichText nodes={level.outputLevelHTML()}></RichText>
-                }
+                <View className='level-wrap'>
+                  <View className='level-btn mr-20' style={
+                    {
+                      background: '#FFFFFF',
+                      color: '#1F3BA6',
+                      borderRadius: '2px'
+                    }
+                  }
+                  >
+                    YGLV {ulevel}
+                  </View>
+                  {
+                    ulevel === 0 ? '' : <RichText nodes={level.outputLevelHTML()}></RichText>
+                  }
+                  </View>
               </View>
             </View>
             <View className='extra-content'>

@@ -150,6 +150,29 @@ export const getUserByToken = (stuid:string | number, token: string) => {
 }
 
 /**
+ * @function 获取站员注册码
+ * */
+export const getRegCode = () => {
+  const opt: HttpRequestOption = {
+    url: YGURL.get_reg_code,
+    method: 'GET'
+  };
+  return ReqAnyData(opt);
+}
+
+/**
+ * @function 设置站员注册码
+ * */
+export const setRegCode = (Rcode : string) => {
+  const opt: HttpRequestOption = {
+    url: YGURL.set_reg_code,
+    method: 'PUT',
+    data: { Rcode }
+  };
+  return Req(opt);
+}
+
+/**
  * @function 获取允许签到的wifi信息
  * */
 export const getAllowWifi = () => {
@@ -192,7 +215,7 @@ export const setAlloLocation = (latlong: {
   range: string | number;
 }) => {
   const opt: HttpRequestOption = {
-    url: YGURL.get_allow_longlat,
+    url: YGURL.set_allow_longlat,
     method: 'PUT',
     data: { latlong: JSON.stringify(latlong) }
   };
