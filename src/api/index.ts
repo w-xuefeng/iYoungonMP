@@ -52,10 +52,22 @@ export const regAccount = ({
  * */
 export const getRegisterCode = () => {
   const opt: HttpRequestOption = {
-    url: YGURL.get_rcode,
+    url: YGURL.get_reg_code,
     method: 'GET'
   }
   return Req(opt)
+}
+
+/**
+ * @function 设置站员注册码
+ * */
+export const setRegisterCode = (Rcode : string) => {
+  const opt: HttpRequestOption = {
+    url: YGURL.set_reg_code,
+    method: 'PUT',
+    data: { Rcode }
+  };
+  return Req(opt);
 }
 
 /**
@@ -150,24 +162,12 @@ export const getUserByToken = (stuid:string | number, token: string) => {
 }
 
 /**
- * @function 获取站员注册码
+ * @function 通过管理员token获取所有管理员信息
  * */
-export const getRegCode = () => {
+export const getAllAdminByToken = (token: string) => {
   const opt: HttpRequestOption = {
-    url: YGURL.get_reg_code,
+    url: `${YGURL.get_all_admin_by_token}/?adminToken=${token}`,
     method: 'GET'
-  };
-  return ReqAnyData(opt);
-}
-
-/**
- * @function 设置站员注册码
- * */
-export const setRegCode = (Rcode : string) => {
-  const opt: HttpRequestOption = {
-    url: YGURL.set_reg_code,
-    method: 'PUT',
-    data: { Rcode }
   };
   return Req(opt);
 }
@@ -273,6 +273,18 @@ export const addDuty = (stuid: number | string, dutydate: string) => {
     url: YGURL.post_update_duty,
     method: 'POST',
     data: { stuid, dutydate }
+  };
+  return Req(opt);
+};
+
+/**
+ * @function 修改用户类型
+ * */
+export const modifyUtype = (stuid: number | string, utype: number) => {
+  const opt: HttpRequestOption = {
+    url: YGURL.patch_user_utype,
+    method: 'PUT',
+    data: { stuid, utype }
   };
   return Req(opt);
 };

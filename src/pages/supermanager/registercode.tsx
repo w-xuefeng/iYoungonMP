@@ -1,12 +1,12 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View } from '@tarojs/components'
-import { getRegCode, setRegCode } from '@/api'
+import { getRegisterCode, setRegisterCode } from '@/api'
 import YGHeader from '@/components/YGHeader'
 import { AtButton, AtIcon, AtInput } from 'taro-ui'
 import './index.scss'
 
 export default class RegisterCode extends Component<{}, {
-  regCode: string;
+  regCode?: string;
   loading: boolean;
   btnloading: boolean;
 }> {
@@ -56,7 +56,7 @@ export default class RegisterCode extends Component<{}, {
   updateRegisterCode() {
     this.setState({ btnloading: true })
     const { regCode } = this.state
-    if (!regCode.trim()) {
+    if (!regCode) {
       Taro.showToast({
         title: '注册码不能为空',
         icon: 'none',
@@ -64,7 +64,7 @@ export default class RegisterCode extends Component<{}, {
       })
       return
     }
-    setRegCode(regCode).then(rs => {
+    setRegisterCode(regCode).then(rs => {
       if (rs.status) {
         Taro.showToast({
           title: '注册码更新成功',
@@ -88,7 +88,7 @@ export default class RegisterCode extends Component<{}, {
         loading: true
       },
       () => {
-        getRegCode().then(rs => {
+        getRegisterCode().then(rs => {
           this.setState({ loading: false, regCode: rs.Rcode })
           Taro.stopPullDownRefresh()
         }).catch(() => {
@@ -108,7 +108,7 @@ export default class RegisterCode extends Component<{}, {
     return (
       <View className='index'>
         <YGHeader back title='设置站员注册码' background='#1F3BA6' />
-        <View className='main'>
+        <View className='main yg-background'>
           {loading ? (
             <View className='loading'>
               <View style='display: flex;margin: 0 auto;align-items:center;'>

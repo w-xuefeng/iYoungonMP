@@ -1,15 +1,30 @@
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View } from '@tarojs/components'
-// import { getAllowWifi, setAllowWifi } from '@/api'
+import { View, Button, Text } from '@tarojs/components'
+import { getAllAdminByToken, modifyUtype } from '@/api'
+import { LocalData, LDKey, handelUserInfo } from '@/utils/index'
 import YGHeader from '@/components/YGHeader'
-import { AtButton, AtIcon } from 'taro-ui'
+import {
+  AtAvatar,
+  AtIcon,
+  AtModal,
+  AtModalHeader,
+  AtModalContent,
+  AtModalAction,
+  AtList,
+  AtListItem,
+  AtSlider
+} from 'taro-ui'
+import { User } from '@/models'
 import './index.scss'
 
 export default class DelAdmin extends Component<{}, {
-  // wifiInfo: WifiInfo | null;
-  // allowwifi: string[];
+  allAdmin: User[];
+  currentStuid: string;
+  currentName: string;
+  currentUtype: number;
+  currentHead?: string;
+  isOpened: boolean;
   loading: boolean;
-  btnloading: boolean;
 }> {
 
   /**
@@ -22,73 +37,203 @@ export default class DelAdmin extends Component<{}, {
   config: Config = {
     navigationStyle: 'custom',
     navigationBarTextStyle: 'white',
-    backgroundColor: '#1F3BA6'
+    backgroundColor: '#1F3BA6',
+    enablePullDownRefresh: true
   }
 
-  wifi: string[] = []
+  utypenames = [
+    '普通用户',
+    '实习站员',
+    '正式站员',
+    '往届站员',
+    '管理员'
+  ]
 
   constructor() {
     super(...arguments)
     this.state = {
-      // wifiInfo: null,
-      // allowwifi: [],
+      allAdmin: [],
+      currentStuid: '',
+      currentName: '',
+      currentUtype: 0,
+      currentHead: '',
+      isOpened: false,
       loading: true,
-      btnloading: false
     }
   }
 
-  componentWillMount() {}
-
-  componentDidMount() { }
-
-  componentWillUnmount() { }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
-
-
-  updateWifiInfo() {
-    // this.setState({ btnloading: true })
-    // const { wifi } = this
-    // setAllowWifi({ wifi }).then(rs => {
-    //   if (rs.status) {
-    //     Taro.showToast({
-    //       title: 'WIFI 更新成功',
-    //       icon: 'success',
-    //       duration: 2000
-    //     })
-    //   }
-    //   this.setState({ btnloading: false })
-    // })
+  componentWillMount () {
+    this.refreshPage()
   }
 
-   render() {
-    const { loading, btnloading } = this.state
+  componentDidMount () {}
+
+  componentWillUnmount () {}
+
+  componentDidShow () { }
+
+  componentDidHide () {}
+
+  close() {
+    this.setState({
+      isOpened: false
+    }, () => {
+      this.setState({
+        currentStuid: '',
+        currentUtype: 0,
+        currentName: '',
+        currentHead: '',
+      })
+    })
+  }
+
+  open(user: User) {
+    this.setState({
+      currentStuid: user.stuid,
+      currentUtype: user.utype,
+      currentName: user.name,
+      currentHead: user.fullhead,
+    }, () => {
+      this.setState({
+        isOpened: true,
+      })
+    })
+  }
+
+  currentUtypeChange(value: number) {
+    this.setState({
+      currentUtype: value
+    })
+  }
+
+  updateUtype(){
+    const { currentStuid: stuid, currentUtype: utype } = this.state
+    modifyUtype(stuid, utype).then(rs => {
+      if (rs && rs.status) {
+        Taro.showToast({
+          title: `修改成功`,
+          icon: 'success',
+          duration: 2000
+        })
+        this.close()
+        this.refreshPage()
+      } else {
+        Taro.showToast({
+          title: '修改失败',
+          icon: 'none',
+          duration: 2000
+        })
+      }
+    })
+  }
+
+  getAllAdmin() {
+    const { token } = LocalData.getItem(LDKey.USER)
+    return getAllAdminByToken(token).then(rs => {
+      this.setState({
+        allAdmin: rs.resdata.filter((e: User) => Number(e.utype) !== 5).map((e: User) => handelUserInfo(e))
+      })
+    })
+  }
+
+  refreshPage() {
+    this.setState(
+      {
+        loading: true
+      },
+      () => {
+        this.getAllAdmin().then(() => {
+          this.setState({ loading: false })
+          Taro.stopPullDownRefresh()
+        }).catch(() => {
+          this.setState({ loading: false })
+          Taro.stopPullDownRefresh()
+        })
+      }
+    )
+  }
+
+  onPullDownRefresh() {
+    this.refreshPage()
+  }
+
+  genAdmin(allAdmin: User[]) {
+    return (
+      <View>
+        <AtList>
+        {
+          allAdmin.map(e => (
+            <AtListItem
+              key={e.stuid}
+              title={e.name}
+              note={e.stuid}
+              extraText={e.utypeName}
+              arrow='right'
+              thumb={e.fullhead}
+              onClick={this.open.bind(this, e)}
+            />
+          ))
+        }
+        </AtList>
+      </View>
+    )
+  }
+
+  render () {
+    const { allAdmin, currentStuid, currentHead, currentName, currentUtype, loading, isOpened } = this.state
     return (
       <View className='index'>
-        <YGHeader back title='设置网站 WIFI' background='#1F3BA6' />
-        <View className='main'>
+        <YGHeader back title='删除管理员' background='#1F3BA6' />
+        <View className='main yg-background'>
           {loading ? (
             <View className='loading'>
-              <View style='display: flex;margin: 0 auto;'>
-                <AtIcon value='loading-3' size='20' color='#333' className='span'></AtIcon>
-                <View className='at-col'>加载中...</View>
+              <View style='display: flex;margin: 0 auto;align-items:center;'>
+                <AtIcon value='loading-3' size='25' color='#333' className='span'></AtIcon>
+                <View className='at-col ml-10'>加载中...</View>
               </View>
             </View>
           ) : (
-              <View>
-                <AtButton
-                  type='primary'
-                  className='btn'
-                  loading={btnloading}
-                  disabled={btnloading}
-                  onClick={this.updateWifiInfo.bind(this)}
-                >
-                  设为管理员
-              </AtButton>
+            <View>
+              <View className='curwifi'>
+                当前管理员：
               </View>
-            )}
+              {this.genAdmin(allAdmin)}
+            </View>
+          )}
+          <AtModal isOpened={isOpened}>
+            <AtModalHeader>删除管理员</AtModalHeader>
+            <AtModalContent>
+              <View style='display:flex;flex-direction: column;padding: 20px'>
+                <View className='line'>
+                  <View className='line-left'>
+                    <AtAvatar image={currentHead} size='small'></AtAvatar>
+                    <View className='info'>
+                      <Text>{currentName}</Text>
+                      <Text className='stuid'>{currentStuid}</Text>
+                    </View>
+                  </View>
+                  <View className='line-right'>
+                    <Text className='utype'>{this.utypenames[currentUtype]}</Text>
+                  </View>
+                </View>
+                <AtSlider
+                  step={1}
+                  value={currentUtype}
+                  max={4}
+                  min={0}
+                  activeColor='#4285F4'
+                  backgroundColor='#BDBDBD'
+                  blockColor='#4285F4'
+                  blockSize={24}
+                  onChange={this.currentUtypeChange.bind(this)}
+                ></AtSlider>
+              </View>
+            </AtModalContent>
+            <AtModalAction>
+              <Button onClick={this.close.bind(this)}>取消</Button>
+              <Button onClick={this.updateUtype.bind(this)}>确定</Button>
+            </AtModalAction>
+          </AtModal>
         </View>
       </View>
     )

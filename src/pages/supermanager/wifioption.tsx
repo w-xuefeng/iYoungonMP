@@ -183,7 +183,7 @@ export default class WifiOptions extends Component<{}, {
     return (
       <View className='index'>
         <YGHeader back title='设置网站 WIFI' background='#1F3BA6' />
-        <View className='main'>
+        <View className='main yg-background'>
           {loading ? (
             <View className='loading'>
               <View style='display: flex;margin: 0 auto;align-items:center;'>

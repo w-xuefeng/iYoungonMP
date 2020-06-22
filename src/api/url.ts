@@ -23,12 +23,6 @@ export class YGURL {
   static post_users = `${BaseUrl}/users`
 
   /**
-  * @function: 获取注册码
-  * @method: GET
-  */
-  static get_rcode =  `${BaseUrl}/commonset/index/getrcode`
-
-  /**
   * @function: 获取用户信息
   * @method: GET
   * @param:  { code }  wx.login()
@@ -145,5 +139,19 @@ export class YGURL {
   * @method: POST
   */
   static post_update_duty = `${BaseUrl}/duty/index/updateduty`
+
+  /**
+  * @function: 添加值班记录
+  * @param: { stuid, utype }
+  * @method: PATCH | PUT
+  */
+  static patch_user_utype = `${BaseUrl}/users/patch/utype`
+
+  /**
+  * @function: 通过 token 获取所有管理员
+  * @param: { adminToken }
+  * @method: GET
+  */
+  static get_all_admin_by_token = `${BaseUrl}/users/get/alladmins`
 
 }
