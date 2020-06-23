@@ -25,6 +25,7 @@ class App extends Component {
       'pages/sign/index',
       'pages/menus/index',
       'pages/signdetail/index',
+      'pages/usermanager/index',
       'pages/supermanager/wifioption',
       'pages/supermanager/locationlimit',
       'pages/supermanager/registercode',

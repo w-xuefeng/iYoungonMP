@@ -173,6 +173,17 @@ export const getAllAdminByToken = (token: string) => {
 }
 
 /**
+ * @function 通过管理员token获取所有用户信息
+ * */
+export const getAllUsersByToken = (token: string) => {
+  const opt: HttpRequestOption = {
+    url: `${YGURL.get_all_user_by_token}/?adminToken=${token}`,
+    method: 'GET'
+  };
+  return Req(opt);
+}
+
+/**
  * @function 获取允许签到的wifi信息
  * */
 export const getAllowWifi = () => {
@@ -285,6 +296,26 @@ export const modifyUtype = (stuid: number | string, utype: number) => {
     url: YGURL.patch_user_utype,
     method: 'PUT',
     data: { stuid, utype }
+  };
+  return Req(opt);
+};
+
+/**
+ * @function 修改用户信息
+ * */
+export const modifyUserInfo = ({
+  stuid,
+  info,
+  value
+}: {
+  stuid: number | string;
+  info: string;
+  value: number | string;
+}) => {
+  const opt: HttpRequestOption = {
+    url: `${YGURL.patch_user_info}/${info}`,
+    method: 'PUT',
+    data: { stuid, [info]: value }
   };
   return Req(opt);
 };

@@ -141,11 +141,18 @@ export class YGURL {
   static post_update_duty = `${BaseUrl}/duty/index/updateduty`
 
   /**
-  * @function: 添加值班记录
+  * @function: 修改用户类型
   * @param: { stuid, utype }
   * @method: PATCH | PUT
   */
   static patch_user_utype = `${BaseUrl}/users/patch/utype`
+
+  /**
+  * @function: 修改用户信息
+  * @param: { info, stuid, [info] }
+  * @method: PATCH | PUT
+  */
+  static patch_user_info = `${BaseUrl}/users/patch`
 
   /**
   * @function: 通过 token 获取所有管理员
@@ -153,5 +160,12 @@ export class YGURL {
   * @method: GET
   */
   static get_all_admin_by_token = `${BaseUrl}/users/get/alladmins`
+
+  /**
+  * @function: 通过 token 获取所有用户
+  * @param: { adminToken }
+  * @method: GET
+  */
+  static get_all_user_by_token = `${BaseUrl}/users`
 
 }
