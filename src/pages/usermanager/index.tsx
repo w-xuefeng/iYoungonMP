@@ -12,10 +12,17 @@ import {
   AtModalAction,
   AtList,
   AtListItem,
-  AtSlider
+  AtSlider,
+  AtSearchBar,
+  AtFloatLayout
 } from 'taro-ui'
 import { User } from '@/models'
 import './index.scss'
+
+type UserFilter = {
+  k: keyof User,
+  v: number | string | number[] | string[]
+}
 
 export default class UserManager extends Component<{}, {
   allUser: User[];
@@ -25,8 +32,13 @@ export default class UserManager extends Component<{}, {
   currentHead?: string;
   currentDepartment?: string;
   currentPosition: number;
+  currentUserTitle: string;
+  keywords: string;
+  rstUser: User[];
   isOpened: boolean;
   loading: boolean;
+  btnloading: boolean;
+  showRst: boolean;
 }> {
 
   /**
@@ -48,6 +60,77 @@ export default class UserManager extends Component<{}, {
     '实习站员',
     '正式站员',
     '往届站员'
+  ]
+
+  noop = () => {}
+
+  logo = 'https://pub.wangxuefeng.com.cn/asset/youngon_logo/logo-blue-small.png'
+
+  menu = [
+    [
+      {
+        color: '#2196F3',
+        text: '普通用户',
+        filter: {
+          k: 'utype',
+          v: 0
+        }
+      },
+      {
+        color: '#9C7DCF',
+        text: '实习站员',
+        filter: {
+          k: 'utype',
+          v: 1
+        }
+      },
+      {
+        color: '#FFA500',
+        text: '正式站员',
+        filter: {
+          k: 'utype',
+          v: 2
+        }
+      },
+    ],
+    [
+      {
+        color: '#4CAF50',
+        text: '往届站员',
+        filter: {
+          k: 'utype',
+          v: 3
+        }
+      },
+      {
+        color: '#008B8B',
+        text: '当前站务',
+        filter: [
+          {
+            k: 'position',
+            v: [4, 5, 6]
+          },
+          {
+            k: 'utype',
+            v: [2, 4, 5]
+          }
+        ]
+      },
+      {
+        color: '#2db7f5',
+        text: '实习站务',
+        filter: [
+          {
+            k: 'position',
+            v: [1, 2, 3]
+          },
+          {
+            k: 'utype',
+            v: 2
+          },
+        ]
+      }
+    ]
   ]
 
   departments = [
@@ -79,8 +162,13 @@ export default class UserManager extends Component<{}, {
       currentHead: '',
       currentDepartment: '',
       currentPosition: 0,
+      currentUserTitle: '',
+      keywords: '',
+      rstUser: [],
       isOpened: false,
       loading: true,
+      btnloading: false,
+      showRst: false,
     }
   }
 
@@ -124,6 +212,74 @@ export default class UserManager extends Component<{}, {
         isOpened: true,
       })
     })
+  }
+
+  keywordsChange(value: string) {
+    this.setState({
+      keywords: value
+    })
+  }
+
+  genUserFilterCondiction(user: User, filter: UserFilter) {
+    const { k, v } = filter
+    if (Array.isArray(v)) {
+      return v.includes(user[k] as never)
+    }
+    return user[k] === v
+  }
+
+  rstFilter(title: string, filterFunc: (v: User) => boolean, filter?: UserFilter | UserFilter[]) {
+    const { allUser, btnloading } = this.state
+    if (btnloading) return
+    Taro.showLoading({ title: '拼命查询中...' })
+    let myfilter = (u: User) => !!u
+    if (filterFunc) {
+      myfilter = filterFunc
+    } else if (filter) {
+      if (Array.isArray(filter)) {
+        myfilter = (u: User) => {
+          const condiction = filter.map(f => this.genUserFilterCondiction(u, f))
+          return condiction.every(e => e)
+        }
+      } else {
+        myfilter = (u: User) => this.genUserFilterCondiction(u, filter)
+      }
+    }
+    this.setState({
+      btnloading: true,
+      currentUserTitle: title,
+      rstUser: allUser.filter(myfilter)
+    }, () => {
+      Taro.hideLoading()
+      this.setState({
+        btnloading: false,
+        showRst: true
+      })
+    })
+  }
+
+  hideRst() {
+    this.setState({
+      currentUserTitle: '',
+      showRst: false
+    }, () => {
+      this.setState({
+        rstUser: []
+      })
+    })
+  }
+
+  searchUser() {
+    const { keywords } = this.state
+    if (!keywords.trim()) {
+      Taro.showToast({
+        title: '请输入学号或姓名',
+        icon: 'none',
+        duration: 2000
+      })
+      return
+    }
+    this.rstFilter(`${keywords}的搜索结果`, u => [u.name, u.stuid].some(e => String(e).includes(keywords)))
   }
 
   currentUtypeChange(value: number) {
@@ -204,12 +360,12 @@ export default class UserManager extends Component<{}, {
     this.refreshPage()
   }
 
-  genAll(allUser: User[]) {
+  genList() {
+    const { rstUser } = this.state
     return (
-      <View>
-        <AtList>
-        {
-          allUser.map(e => (
+      <AtList>
+        {rstUser.length ?
+          rstUser.map(e => (
             <AtListItem
               key={e.stuid}
               title={e.name}
@@ -219,16 +375,55 @@ export default class UserManager extends Component<{}, {
               thumb={e.fullhead}
               onClick={this.open.bind(this, e)}
             />
-          ))
+          )) : <View className='none'>没有结果</View>
         }
-        </AtList>
+      </AtList>
+    )
+  }
+
+  genAll() {
+    const { showRst, currentUserTitle, keywords } = this.state
+    return (
+      <View className='useradmin'>
+        <View className='logo' style={{backgroundImage: `url(${this.logo})`}}></View>
+        <AtSearchBar
+          className='search-bar'
+          value={keywords}
+          onChange={this.keywordsChange.bind(this)}
+          placeholder='请输入学号或者姓名搜索'
+          onActionClick={this.searchUser.bind(this)}
+        />
+        <View className='user-menu'>
+          {
+            this.menu.map((m, i) => (
+              <View key={`menu-${i}`} className='user-menu-row'>
+                {m.map(menu => (
+                  <View
+                    key={menu.text}
+                    className='user-menu-row-item'
+                    onClick={this.rstFilter.bind(this, menu.text, null, menu.filter)}
+                  >
+                    <AtIcon value='user' size='20' color={menu.color || '#000'}></AtIcon>
+                    <Text>{menu.text}</Text>
+                  </View>
+                ))}
+              </View>
+            ))
+          }
+        </View>
+        <AtFloatLayout
+          isOpened={showRst}
+          title={currentUserTitle}
+          onClose={this.hideRst.bind(this)}
+        >
+          {this.genList()}
+        </AtFloatLayout>
       </View>
     )
   }
 
   render () {
     const {
-      allUser,
       currentStuid,
       currentHead,
       currentName,
@@ -249,12 +444,8 @@ export default class UserManager extends Component<{}, {
                 <View className='at-col ml-10'>加载中...</View>
               </View>
             </View>
-          ) : (
-            <View>
-              {this.genAll(allUser)}
-            </View>
-          )}
-          <AtModal isOpened={isOpened}>
+          ) : this.genAll()}
+          <AtModal isOpened={isOpened} closeOnClickOverlay={false}>
             <AtModalHeader>修改用户信息</AtModalHeader>
             <AtModalContent>
               <View style='display:flex;flex-direction: column;padding: 20px'>
