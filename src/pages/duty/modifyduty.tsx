@@ -14,9 +14,11 @@ import {
   AtListItem,
   AtSlider,
   AtSearchBar,
-  AtFloatLayout
+  AtFloatLayout,
+  AtForm,
+  AtSwitch
 } from 'taro-ui'
-import { User } from '@/models'
+import { User, Duty } from '@/models'
 import './index.scss'
 
 type UserFilter = {
@@ -24,15 +26,17 @@ type UserFilter = {
   v: number | string | number[] | string[]
 }
 
-export default class UserManager extends Component<{}, {
+export default class ModifyDuty extends Component<{}, {
   allUser: User[];
   currentStuid: string;
   currentName: string;
-  currentUtype: number;
   currentHead?: string;
-  currentDepartment?: string;
-  currentPosition: number;
   currentUserTitle: string;
+  currentUserDutyCount: number
+  currentUserDutyState: 0 | 1;
+  currentUserDutyWeek: number[];
+  currentUserDutyClass: number[];
+  currentUserDutyList?: string[];
   keywords: string;
   rstUser: User[];
   isOpened: boolean;
@@ -55,15 +59,6 @@ export default class UserManager extends Component<{}, {
     enablePullDownRefresh: true
   }
 
-  utypenames = [
-    '普通用户',
-    '实习站员',
-    '正式站员',
-    '往届站员'
-  ]
-
-  noop = () => {}
-
   logo = 'https://pub.wangxuefeng.com.cn/asset/youngon_logo/logo-blue-small.png'
 
   menu = [
@@ -84,16 +79,16 @@ export default class UserManager extends Component<{}, {
           v: 1
         }
       },
+    ],
+    [
       {
         color: '#FFA500',
         text: '正式站员',
         filter: {
           k: 'utype',
-          v: 2
+          v: [2, 4, 5]
         }
       },
-    ],
-    [
       {
         color: '#4CAF50',
         text: '往届站员',
@@ -102,34 +97,6 @@ export default class UserManager extends Component<{}, {
           v: 3
         }
       },
-      {
-        color: '#008B8B',
-        text: '当前站务',
-        filter: [
-          {
-            k: 'position',
-            v: [4, 5, 6]
-          },
-          {
-            k: 'utype',
-            v: [2, 4, 5]
-          }
-        ]
-      },
-      {
-        color: '#2db7f5',
-        text: '实习站务',
-        filter: [
-          {
-            k: 'position',
-            v: [1, 2, 3]
-          },
-          {
-            k: 'utype',
-            v: 2
-          },
-        ]
-      }
     ]
   ]
 
@@ -141,28 +108,19 @@ export default class UserManager extends Component<{}, {
     '运营部'
   ]
 
-  positionnames = [
-    '站员',
-    '实习部长',
-    '实习副站',
-    '实习站长',
-    '部长',
-    '副站',
-    '站长',
-    '指导老师'
-  ]
-
   constructor() {
     super(...arguments)
     this.state = {
       allUser: [],
       currentStuid: '',
       currentName: '',
-      currentUtype: 0,
       currentHead: '',
-      currentDepartment: '',
-      currentPosition: 0,
       currentUserTitle: '',
+      currentUserDutyCount: 0,
+      currentUserDutyState:0,
+      currentUserDutyWeek: [],
+      currentUserDutyClass: [],
+      currentUserDutyList: [],
       keywords: '',
       rstUser: [],
       isOpened: false,
@@ -190,27 +148,34 @@ export default class UserManager extends Component<{}, {
     }, () => {
       this.setState({
         currentStuid: '',
-        currentUtype: 0,
         currentName: '',
         currentHead: '',
-        currentDepartment: '',
-        currentPosition: 0,
+        currentUserDutyCount: 0,
+        currentUserDutyState: 0,
+        currentUserDutyWeek: [],
+        currentUserDutyClass: [],
       })
     })
   }
 
   open(user: User) {
+    const duty: {
+      state: 0 | 1,
+      week: number[],
+      class: number[],
+      dutydate?: string[]
+    } = JSON.parse(user.duty);
     this.setState({
       currentStuid: user.stuid,
-      currentUtype: user.utype,
       currentName: user.name,
       currentHead: user.fullhead,
-      currentDepartment: user.department,
-      currentPosition: user.position || 0,
+      currentUserDutyCount: duty.week.length,
+      currentUserDutyState: duty.state,
+      currentUserDutyWeek: duty.week,
+      currentUserDutyClass: duty.class,
+      currentUserDutyList: duty.dutydate
     }, () => {
-      this.setState({
-        isOpened: true,
-      })
+      this.setState({ isOpened: true })
     })
   }
 
@@ -283,37 +248,62 @@ export default class UserManager extends Component<{}, {
     this.rstFilter(`${keywords}的搜索结果`, u => [u.name, u.stuid].some(e => String(e).includes(keywords)))
   }
 
-  currentUtypeChange(value: number) {
-    this.setState({
-      currentUtype: value
+  currentUserDutyCountChange(value: number) {
+    this.setState(state => {
+      let { currentUserDutyWeek, currentUserDutyClass } = state
+      const week: number[] = []
+      const classs: number[] = []
+      for (let i = 0; i < value; i++) {
+        week[i] = currentUserDutyWeek[i] || 1
+        classs[i] = currentUserDutyClass[i] || 1
+      }
+      currentUserDutyWeek = week
+      currentUserDutyClass = classs
+      return {
+        currentUserDutyCount: value,
+        currentUserDutyWeek,
+        currentUserDutyClass
+      }
     })
   }
 
-  currentDepartmentChange(value: number) {
+  handlecurrentUserDutyStateChange(value: boolean) {
     this.setState({
-      currentDepartment: this.departments[value]
+      currentUserDutyState: value ? 1 : 0
     })
   }
 
-  currentPositionChange(value: number) {
-    this.setState({
-      currentPosition: value
+  currentUserDutyWeekChange(value: number, index: number) {
+    this.setState(state => {
+      let { currentUserDutyWeek } = state
+      currentUserDutyWeek[index] = value
+      return { currentUserDutyWeek }
+    })
+  }
+
+  currentUserDutyClassChange(value: number, index: number) {
+    this.setState(state => {
+      let { currentUserDutyClass } = state
+      currentUserDutyClass[index] = value
+      return { currentUserDutyClass }
     })
   }
 
   updateInfo(){
     const {
       currentStuid: stuid,
-      currentUtype: utype,
-      currentDepartment: department,
-      currentPosition: position
+      currentUserDutyState: state,
+      currentUserDutyWeek: week,
+      currentUserDutyClass: classTime,
+      currentUserDutyList: dutydate
     } = this.state
-    Promise.all([
-      modifyUserInfo({ stuid, value: utype, info: 'utype'}),
-      modifyUserInfo({ stuid, value: department!, info: 'department'}),
-      modifyUserInfo({ stuid, value: position, info: 'position'})
-    ]).then(rs => {
-      if (rs.some(e => e.status)) {
+    const value = JSON.stringify(new Duty({ state, week, class: classTime, dutydate }))
+    modifyUserInfo({
+      stuid,
+      value,
+      info: 'duty'
+    }).then(rs => {
+      if (rs.status) {
         Taro.showToast({
           title: `修改成功`,
           icon: 'success',
@@ -371,7 +361,7 @@ export default class UserManager extends Component<{}, {
               key={e.stuid}
               title={e.name}
               note={e.stuid}
-              extraText={`${e.utypeName}`}
+              extraText={`${JSON.parse(e.duty).state === 1 ? '' : '不'}参与值班`}
               arrow='right'
               thumb={e.fullhead}
               onClick={this.open.bind(this, e)}
@@ -423,20 +413,78 @@ export default class UserManager extends Component<{}, {
     )
   }
 
+  genDuty() {
+    const {
+      currentUserDutyWeek,
+      currentUserDutyClass,
+      currentUserDutyCount
+    } = this.state
+    return (
+      <View>
+        <View className='flex-column'>
+          <Text>每周值班次数：{currentUserDutyCount}</Text>
+          <AtSlider
+            step={1}
+            value={currentUserDutyCount}
+            max={4}
+            min={1}
+            activeColor='#007ACC'
+            backgroundColor='#BDBDBD'
+            blockColor='#007ACC'
+            blockSize={24}
+            onChange={this.currentUserDutyCountChange.bind(this)}
+          ></AtSlider>
+        </View>
+        {
+          currentUserDutyWeek.map((week, i) => (
+            <View key={`week-class-${i}`} style='background: #eee;margin: 10px 0;padding: 15px;'>
+              <View className='flex-column'>
+                <Text>星期: {week}</Text>
+                <AtSlider
+                  step={1}
+                  value={Number(week)}
+                  max={7}
+                  min={1}
+                  activeColor='#16C60C'
+                  backgroundColor='#BDBDBD'
+                  blockColor='#16C60C'
+                  blockSize={24}
+                  onChange={value => this.currentUserDutyWeekChange(value, i)}
+                ></AtSlider>
+              </View>
+              <View className='flex-column'>
+                <Text>课节：{currentUserDutyClass[i]}</Text>
+                <AtSlider
+                  step={1}
+                  value={Number(currentUserDutyClass[i])}
+                  max={4}
+                  min={1}
+                  activeColor='#007ACC'
+                  backgroundColor='#BDBDBD'
+                  blockColor='#007ACC'
+                  blockSize={24}
+                  onChange={value => this.currentUserDutyClassChange(value, i)}
+                ></AtSlider>
+              </View>
+            </View>
+          ))
+        }
+    </View>
+   )
+  }
+
   render () {
     const {
       currentStuid,
       currentHead,
       currentName,
-      currentUtype,
-      currentDepartment,
-      currentPosition,
       loading,
-      isOpened
+      isOpened,
+      currentUserDutyState
     } = this.state
     return (
       <View className='index'>
-        <YGHeader back title='用户管理' background='#1F3BA6' />
+        <YGHeader back title='安排值班' background='#1F3BA6' />
         <View className='main yg-background'>
           {loading ? (
             <View className='loading'>
@@ -447,7 +495,7 @@ export default class UserManager extends Component<{}, {
             </View>
           ) : this.genAll()}
           <AtModal isOpened={isOpened} closeOnClickOverlay={false}>
-            <AtModalHeader>修改用户信息</AtModalHeader>
+            <AtModalHeader>修改值班信息</AtModalHeader>
             <AtModalContent>
               <View style='display:flex;flex-direction: column;padding: 20px'>
                 <View className='line mb-20'>
@@ -459,55 +507,27 @@ export default class UserManager extends Component<{}, {
                     </View>
                   </View>
                   <View className='line-right'>
-                    <Text className='utype'>{this.utypenames[currentUtype]}</Text>
+                    <Text
+                      className='utype'
+                      style={{
+                        color: currentUserDutyState === 1 ? '#16C60C' : '#007ACC'
+                      }}
+                    >
+                      {currentUserDutyState === 1 ? '参与值班': '不参与值班'}
+                    </Text>
                   </View>
                 </View>
                 <View className='flex-column'>
-                  <Text>所在部门：{currentDepartment}</Text>
-                  <AtSlider
-                    step={1}
-                    value={this.departments.findIndex(e => e === currentDepartment)}
-                    max={4}
-                    min={0}
-                    activeColor='#007ACC'
-                    backgroundColor='#BDBDBD'
-                    blockColor='#007ACC'
-                    blockSize={24}
-                    onChange={this.currentDepartmentChange.bind(this)}
-                  ></AtSlider>
+                  <AtForm>
+                    <AtSwitch
+                      title='是否值班：'
+                      border={false}
+                      checked={currentUserDutyState === 1}
+                      onChange={this.handlecurrentUserDutyStateChange.bind(this)}
+                    />
+                  </AtForm>
                 </View>
-                {
-                  [4, 5].includes(currentUtype) ? '' : (
-                  <View className='flex-column'>
-                    <Text>用户类型：{this.utypenames[currentUtype]}</Text>
-                    <AtSlider
-                      step={1}
-                      value={currentUtype}
-                      max={3}
-                      min={0}
-                      activeColor='#4285F4'
-                      backgroundColor='#BDBDBD'
-                      blockColor='#4285F4'
-                      blockSize={24}
-                      onChange={this.currentUtypeChange.bind(this)}
-                    ></AtSlider>
-                  </View>
-                  )
-                }
-                <View className='flex-column'>
-                  <Text>当前职位：{this.positionnames[currentPosition]}</Text>
-                  <AtSlider
-                    step={1}
-                    value={currentPosition}
-                    max={7}
-                    min={0}
-                    activeColor='#16C60C'
-                    backgroundColor='#BDBDBD'
-                    blockColor='#16C60C'
-                    blockSize={24}
-                    onChange={this.currentPositionChange.bind(this)}
-                  ></AtSlider>
-                </View>
+                {currentUserDutyState === 1 ? this.genDuty() : undefined}
               </View>
             </AtModalContent>
             <AtModalAction>
