@@ -319,3 +319,14 @@ export const modifyUserInfo = ({
   };
   return Req(opt);
 };
+
+/**
+ * @function 自动查值班
+ * */
+export const getDutyInfo = () => {
+  const opt: HttpRequestOption = {
+    url: YGURL.get_duty_info,
+    method: 'GET'
+  };
+  return ReqAnyData(opt);
+}

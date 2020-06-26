@@ -1,4 +1,5 @@
 @import '~@/background.scss';
+@import "~@/config.scss";
 
 page {
   height: 100%;
@@ -180,6 +181,10 @@ slider {
   margin: 30px auto;
 }
 
+.search-bar-query-duty {
+  background: $background-image-gradualBlue;
+}
+
 .none {
   width: 100%;
   min-height: 100px;
@@ -200,4 +205,24 @@ slider {
 
 .at-modal__container {
   width: 90%;
+}
+
+.auto-query {
+  color: black;
+  font-size: 36px;
+  height: 100%;
+  overflow: hidden;
+  .main {
+    .head-info {
+      margin-bottom: 30px;
+    }
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding-bottom: 25%;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
 }

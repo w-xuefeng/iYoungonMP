@@ -168,4 +168,9 @@ export class YGURL {
   */
   static get_all_user_by_token = `${BaseUrl}/users`
 
+  /**
+  * @function: 自动查值班
+  * @method: GET
+  */
+  static get_duty_info = `${BaseUrl}/duty/query`
 }

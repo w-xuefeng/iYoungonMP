@@ -28,4 +28,17 @@ export class Duty {
   }
 }
 
+export type DutyInfo = {
+  stuid: string | number;
+  name: string;
+  week: number[];
+  class: number[];
+  dutydate: string[];
+  head: string[];
+  duty?: {
+    week: number;
+    class: number;
+  }[]
+}
+
 export default Duty;
