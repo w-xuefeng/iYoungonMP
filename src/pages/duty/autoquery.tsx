@@ -175,7 +175,7 @@ export default class AutoQueryDuty extends Component<{}, AutoQueryDutyState> {
                 className='flex-column'
                 style='background:rgba(0,0,0,0.10);margin: 10px auto;padding: 15px;'
               >
-                <Text>实际班时间：</Text>
+                <Text>实际值班时间：</Text>
                 {
                   duty.dutydate.length ? duty.dutydate.map((e, i) => (
                     <Text

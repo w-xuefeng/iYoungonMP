@@ -330,3 +330,63 @@ export const getDutyInfo = () => {
   };
   return ReqAnyData(opt);
 }
+
+/**
+ * @function 获取待处理/已拒绝的申请
+ * */
+export const getApplyByType = (type: 'unapproved' | 'refuse') => {
+  const opt: HttpRequestOption = {
+    url: `${YGURL.get_apply_by_type}/${type}`,
+    method: "GET"
+  };
+  return ReqAnyData(opt);
+};
+
+/**
+ * @function 分页获取已同意的申请
+ * */
+export const getApprovalApply = (page: number) => {
+  const opt: HttpRequestOption = {
+    url: `${YGURL.get_apply_by_type}/approvalByPage?page=${page}`,
+    method: "GET"
+  };
+  return ReqAnyData(opt);
+};
+
+/**
+ * @function 处理申请
+ * */
+export const handleApply = ({
+  stuid,
+  aid,
+  state
+}: {
+  stuid: number | string;
+  aid: number;
+  state: 0 | 1 | 2;
+}) => {
+  const opt: HttpRequestOption = {
+    url: YGURL.patch_handle_apply,
+    method: 'PUT',
+    data: { stuid, aid, state }
+  };
+  return Req(opt);
+};
+
+
+/**
+ * @function 发送邮件
+ * */
+export const sendEmail = ({ tomail, type, title, content }: {
+  tomail: number | string;
+  type: number;
+  title: string;
+  content: string;
+}) => {
+  const opt: HttpRequestOption = {
+    url: YGURL.post_email,
+    method: 'POST',
+    data: { tomail, type, title, content }
+  };
+  return Req(opt);
+};

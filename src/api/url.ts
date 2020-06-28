@@ -173,4 +173,25 @@ export class YGURL {
   * @method: GET
   */
   static get_duty_info = `${BaseUrl}/duty/query`
+
+  /**
+  * @function: 发送邮件
+  * @param： { tomail, type, title, content }
+  * @method: POST
+  */
+  static post_email = `${BaseUrl}/email`
+
+  /**
+  * @function: 获取申请
+  * @param： { type }
+  * @method: GET
+  */
+  static get_apply_by_type = `${BaseUrl}/application/get`
+
+  /**
+  * @function: 处理申请
+  * @param： { stuid, aid, state }
+  * @method: PATCH | PUT
+  */
+  static patch_handle_apply = `${BaseUrl}/application/reply`
 }
