@@ -40,11 +40,11 @@ page {
   height: 100%;
 }
 
-.page-apply-list {
+.page-notice {
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  padding: 90px 20px;
+  padding: 20px;
 }
 
 .ml-10 {
@@ -64,26 +64,17 @@ page {
   text-align: center;
   color: #666;
 }
-.agree-btn {
+
+.notice-footer {
+  font-size: 20px;
+  text-align: end;
+  color: #666;
+}
+
+.post-btn {
+  width: 95%;
+  margin: 20px auto;
   background: #007ACC;
   color: #FFFFFF;
-}
-.refuse-btn {
-  background: #E64949;
-  color: #FFFFFF;
-}
-.handled {
-  margin: 20px 0;
-  text-align: end;
-}
-.head-info {
-  margin-bottom: 30px;
-}
-.fixedTab {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-  height: 90rpx;
-  background: #FFFFFF;
+  border-radius: 5px;
 }

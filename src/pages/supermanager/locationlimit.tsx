@@ -165,7 +165,7 @@ export default class LocationLimit extends Component<{}, {
   private genLocation() {
     const { latitude, longitude, range } = this.state
     return (
-      <View className='page'>
+      <View className='page-super'>
         <AtInput
           name='longitude'
           title='经度'
@@ -197,7 +197,7 @@ export default class LocationLimit extends Component<{}, {
   private genCurrentLocation() {
     const { currentLocation } = this.state
     return (
-      <View className='page'>
+      <View className='page-super'>
         <AtInput
           name='longitude'
           title='当前经度'

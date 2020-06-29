@@ -337,7 +337,7 @@ export const getDutyInfo = () => {
 export const getApplyByType = (type: 'unapproved' | 'refuse') => {
   const opt: HttpRequestOption = {
     url: `${YGURL.get_apply_by_type}/${type}`,
-    method: "GET"
+    method: 'GET'
   };
   return ReqAnyData(opt);
 };
@@ -348,9 +348,43 @@ export const getApplyByType = (type: 'unapproved' | 'refuse') => {
 export const getApprovalApply = (page: number) => {
   const opt: HttpRequestOption = {
     url: `${YGURL.get_apply_by_type}/approvalByPage?page=${page}`,
-    method: "GET"
+    method: 'GET'
   };
   return ReqAnyData(opt);
+};
+
+/**
+ * @function 分页获取公告列表
+ * */
+export const getNoticeByPage = (page: number) => {
+  const opt: HttpRequestOption = {
+    url: `${YGURL.get_notices_by_page}/?page=${page}`,
+    method: 'GET'
+  };
+  return ReqAnyData(opt);
+};
+
+/**
+ * @function 查询某人值班情况
+ * */
+export const getDutyByStuid = (stuid: number) => {
+  const opt: HttpRequestOption = {
+    url: `${YGURL.get_duty_info_by_stuid}/?stuid=${stuid}`,
+    method: 'GET'
+  };
+  return ReqAnyData(opt);
+};
+
+/**
+ * @function 发布公告
+ * */
+export const postNotice = (stuid: number | string, content: string) => {
+  const opt: HttpRequestOption = {
+    url: YGURL.post_notice,
+    method: 'POST',
+    data: { stuid, content }
+  };
+  return Req(opt);
 };
 
 /**
@@ -373,7 +407,6 @@ export const handleApply = ({
   return Req(opt);
 };
 
-
 /**
  * @function 发送邮件
  * */
@@ -387,6 +420,22 @@ export const sendEmail = ({ tomail, type, title, content }: {
     url: YGURL.post_email,
     method: 'POST',
     data: { tomail, type, title, content }
+  };
+  return Req(opt);
+};
+
+/**
+ * @function 向当前在站正式站员发送邮件
+ * */
+export const sendEmailToCurYoungoner = ({ type, title, content }: {
+  type: number;
+  title: string;
+  content: string;
+}) => {
+  const opt: HttpRequestOption = {
+    url: `${YGURL.post_email}/post/curyoungon`,
+    method: 'POST',
+    data: { type, title, content }
   };
   return Req(opt);
 };

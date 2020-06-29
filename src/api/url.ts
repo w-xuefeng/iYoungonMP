@@ -29,12 +29,25 @@ export class YGURL {
   */
   static get_users = `${BaseUrl}/users/get/wxlogin`
 
-
   /**
   * @function: 获取最新公告
   * @method: GET
   */
   static get_last_notices = `${BaseUrl}/notice/get`
+
+  /**
+  * @function: 分页获取公告列表
+  * @method: GET
+  * @param:  { page }
+  */
+  static get_notices_by_page = `${BaseUrl}/notice/get/all`
+
+  /**
+  * @function: 发布公告
+  * @method: POST
+  * @param:  { stuid, content }
+  */
+  static post_notice = `${BaseUrl}/notice/post`
 
   /**
   * @function: 获取当前在站人员信息
@@ -173,6 +186,13 @@ export class YGURL {
   * @method: GET
   */
   static get_duty_info = `${BaseUrl}/duty/query`
+
+  /**
+  * @function: 查询某人值班情况
+  * @method: GET
+  * @param: { stuid }
+  */
+  static get_duty_info_by_stuid = `${BaseUrl}/duty/query/stuid`
 
   /**
   * @function: 发送邮件

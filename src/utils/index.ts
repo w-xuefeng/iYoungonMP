@@ -225,7 +225,7 @@ export const transDepartMentColor = (department: string) => {
     case '实习站员': color = '#008B8B'
     break
     case '天商人': color = '#2db7f5'
-    break   
+    break
     default: color = '#2196F3'
   }
   return color
@@ -284,4 +284,17 @@ export function getNowTime () {
     ymd,
     hms
   }
+}
+
+/**
+ * 函数防抖
+ */
+export function debounce(fn: Function, wait: number) {
+  let timer: null | number = null;
+  return function() {
+    if (timer !== null) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(fn, wait);
+  };
 }

@@ -51,7 +51,7 @@ export default class ApplyList extends Component<{}, ApplyListState> {
     navigationStyle: 'default',
     navigationBarTextStyle: 'white',
     navigationBarBackgroundColor: '#1F3BA6',
-    navigationBarTitleText: '申请列表',
+    navigationBarTitleText: '提出申请',
     backgroundColor: '#1F3BA6',
     enablePullDownRefresh: true,
     onReachBottomDistance: 50
@@ -353,7 +353,7 @@ export default class ApplyList extends Component<{}, ApplyListState> {
       }
     ]
     return (
-      <View className='page-apply-list yg-background'>
+      <View className='page yg-background'>
         {
           loading
             ? (

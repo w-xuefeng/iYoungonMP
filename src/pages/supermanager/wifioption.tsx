@@ -145,7 +145,7 @@ export default class WifiOptions extends Component<{}, {
 
   private genWifiInput(allowwifi: string[]) {
     return (
-      <View className='page'>
+      <View className='page-super'>
         {
           allowwifi.map((wifi, i) => (
             <View key={wifi} className='row'>
