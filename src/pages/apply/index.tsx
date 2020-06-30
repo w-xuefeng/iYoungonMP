@@ -251,7 +251,7 @@ export default class AddApply extends Component<{}, AddApplyListState> {
     return (
       <View className='flex-column'>
         <View className='flex-column' style='margin: 10px'>
-          <Text>请假原因:</Text>
+          <Text style='margin-bottom: 10px'>请假原因:</Text>
           <AtTextarea
             count={false}
             value={appreason}
