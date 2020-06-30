@@ -147,9 +147,12 @@ export default class ApplyList extends Component<{}, ApplyListState> {
           tomail: apply.applicantstuid,
           title,
           content
+        }).then(() => {
+          this.initPage()
         })
+      } else {
+        this.initPage()
       }
-      this.initPage()
     })
   }
 
@@ -158,7 +161,7 @@ export default class ApplyList extends Component<{}, ApplyListState> {
     title: string;
     content: string;
   }) {
-    sendEmail({ tomail, type: 2, title, content }).then(rs => {
+    return sendEmail({ tomail, type: 2, title, content }).then(rs => {
       if (rs.status) {
         Taro.showToast({
           icon: 'none',
@@ -201,6 +204,7 @@ export default class ApplyList extends Component<{}, ApplyListState> {
         applayInfoRefuse: rs[2],
         loading: false
       })
+      Taro.stopPullDownRefresh()
     })
   }
 

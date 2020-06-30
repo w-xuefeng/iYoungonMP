@@ -1,44 +1,32 @@
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Text, Button } from '@tarojs/components'
-import { Apply, User } from '@/models'
+import { View, Text, Picker } from '@tarojs/components'
+import { User } from '@/models'
 import {
-  AtAvatar,
   AtTabs,
+  AtTabsPane,
   AtButton,
-  AtIcon,
-  AtModal,
-  AtModalHeader,
-  AtModalContent,
-  AtModalAction
+  AtSlider,
+  AtTextarea,
+  AtList,
+  AtListItem
 } from 'taro-ui'
-import { YGURL } from '@/api/url'
 import { LocalData, LDKey } from '@/utils/index'
-import {
-  getApplyByType,
-  getApprovalApply,
-  handleApply,
-  sendEmail
-} from '@/api'
-import YGCardWithTitleTip from '@/components/YGCardWithTitleTip'
+import { postApply, sendEmailToAdmins } from '@/api'
 import './index.scss'
 
-
-
-type ApplyListState = {
-  isOpened: boolean;
-  loading: boolean;
-  loadingMore: boolean;
+type AddApplyListState = {
   btnloading: boolean;
   currentTabs: number;
   currentUser: User;
-  currentApply: Apply;
-  currentApplyState: 0 | 1 | 2;
-  applayInfoUndo: Apply[];
-  applayInfoAgree: Apply[];
-  applayInfoRefuse: Apply[];
+  appreason: string;
+  appotherreason: string;
+  apptime: string;
+  appclass: number;
+  appfixtime: string;
+  appfixclass: number;
 }
 
-export default class ApplyList extends Component<{}, ApplyListState> {
+export default class AddApply extends Component<{}, AddApplyListState> {
 
   /**
    * 指定config的类型声明为: Taro.Config
@@ -60,17 +48,15 @@ export default class ApplyList extends Component<{}, ApplyListState> {
   constructor() {
     super(...arguments)
     this.state = {
-      isOpened: false,
-      applayInfoUndo: [],
-      applayInfoAgree: [],
-      applayInfoRefuse: [],
-      currentApply: new Apply(),
-      currentApplyState: 0,
       currentUser: LocalData.getItem(LDKey.USER),
-      loading: true,
-      loadingMore: false,
       btnloading: false,
-      currentTabs: 0
+      currentTabs: 0,
+      appreason: '',
+      appotherreason: '',
+      apptime: '',
+      appclass: 0,
+      appfixtime: '',
+      appfixclass: 0
     }
   }
 
@@ -90,328 +76,308 @@ export default class ApplyList extends Component<{}, ApplyListState> {
     this.initPage()
   }
 
-  onReachBottom() {
-    const { currentTabs } = this.state
-    if (currentTabs === 1) {
-      this.loadMore()
-    }
-  }
-
-  close() {
-    this.setState({
-      isOpened: false
-    }, () => {
-      this.setState({
-        currentApply: new Apply(),
-        currentApplyState: 0
-      })
-    })
-  }
-
-  open(apply: Apply, state: 1 | 2) {
-    this.setState({
-      currentApply: apply,
-      currentApplyState: state
-    }, () => {
-      this.setState({ isOpened: true })
-    })
-  }
-
-  genMailContent(apply: Apply, state: 1 | 2) {
-    const status = state === 1 ? '已经' : '未'
-    const content = `您于${apply.appdate}提出的申请${status}被批准！具体申请内容如下<br>
-      ${
-        apply.appclass === 0 ? `申请内容: ${apply.appreason}`
-          : `
-              请假原因：${apply.appreason}<br/>
-              请假时间：${apply.apptime}<br/>
-              请假课节：${apply.appclass}<br/>
-              补值班时间：${apply.appfixtime}<br/>
-              补值班课节：${apply.appfixclass}<br/>
-            `
-      }`
-    const title = `您的申请${status}被批准`
+  genMailContent(applyInfo: {
+    stuid: string;
+    reason: string;
+    apptime: string;
+    appclass: number;
+    appfixtime: string;
+    appfixclass: number;
+  }) {
+    const { currentUser, currentTabs } = this.state
+    const content = currentTabs === 0
+      ? `<br/>
+        请假原因：${applyInfo.reason}<br/>
+        请假时间：${applyInfo.apptime}<br/>
+        请假课节：${applyInfo.appclass}<br/>
+        补值班时间：${applyInfo.appfixtime}<br/>
+        补值班课节：${applyInfo.appfixclass}<br/>
+        请管理员尽快回复申请!<br/>
+      `
+      : `<br/>
+        请假内容：${applyInfo.reason}<br/>
+        请管理员尽快回复申请!<br/>
+      `
+    const title = `${currentUser.name}提出申请`
     return { content, title }
   }
 
-  handleApply(stuid: string | number, apply: Apply, state: 1 | 2) {
+  prePost() {
+    const {
+      currentTabs,
+      appreason: reason,
+      appotherreason: otherreason,
+      apptime,
+      appclass,
+      appfixtime,
+      appfixclass
+    } = this.state
+    if (currentTabs === 0) {
+      if (!reason.trim() || !apptime || !appclass || !appfixtime || !appfixclass) {
+        Taro.showToast({
+          icon: 'none',
+          title: '信息填写不完整'
+        })
+        return
+      }
+    } else if (currentTabs === 1) {
+      if (!otherreason.trim()) {
+        Taro.showToast({
+          icon: 'none',
+          title: '请填写申请内容'
+        })
+        return
+      }
+    }
+    Taro.showModal({
+      title: '提示',
+      content: '确定要发布这条申请吗？',
+      success: res => {
+        if (res.confirm) {
+          this.postApply()
+        }
+      }
+    })
+  }
+
+  postApply() {
     this.setState({ btnloading: true })
-    handleApply({ stuid, aid: apply.aid, state }).then(rs => {
+    const {
+      currentTabs,
+      currentUser,
+      appreason: reason,
+      appotherreason: otherreason,
+      apptime,
+      appclass,
+      appfixtime,
+      appfixclass
+    } = this.state
+    const { stuid } = currentUser
+    let applyInfo = { stuid, reason, apptime, appclass, appfixtime, appfixclass }
+    if (currentTabs === 1)  {
+      applyInfo = {
+        stuid,
+        reason: otherreason,
+        apptime: '2017-01-01',
+        appclass: 0,
+        appfixtime: '2017-01-01',
+        appfixclass: 0
+      }
+    }
+    postApply(applyInfo).then(rs => {
       if (rs.status) {
         Taro.showToast({
           icon: 'success',
           title: '处理成功'
         })
-        const { content, title } = this.genMailContent(apply, state)
-        this.sendEmail({
-          tomail: apply.applicantstuid,
-          title,
-          content
+        const { content, title } = this.genMailContent(applyInfo)
+        this.sendEmail({ title, content }).then(() => {
+          this.initPage()
         })
+      } else {
+        this.initPage()
       }
-      this.initPage()
     })
   }
 
-  sendEmail({ tomail, title, content }: {
-    tomail: string | number;
+  sendEmail({ title, content }: {
     title: string;
     content: string;
   }) {
-    sendEmail({ tomail, type: 2, title, content }).then(rs => {
+    return sendEmailToAdmins({ type: 2, title, content }).then(rs => {
       if (rs.status) {
         Taro.showToast({
           icon: 'none',
-          title: '已邮件告知该站员'
+          title: '申请已提交，请等待管理员回复'
         })
       }
-    })
-  }
-
-  loadMore() {
-    this.setState({ loadingMore: true })
-    getApprovalApply(this.state.applayInfoAgree.length).then(rs => {
-      this.setState(state => {
-        const { applayInfoAgree } = state
-        applayInfoAgree.push(...rs)
-        return { applayInfoAgree }
-      }, () => {
-          this.setState({ loadingMore: false})
-      })
     })
   }
 
   initPage() {
     this.setState({
-      isOpened: false,
-      loading: true,
       btnloading: false,
-      loadingMore: false,
-      currentApplyState: 0,
-      currentApply: new Apply(),
-    })
-    Promise.all([
-      getApplyByType('unapproved'),
-      getApprovalApply(0),
-      getApplyByType('refuse'),
-    ]).then((rs: (Apply[])[]) => {
-      this.setState({
-        applayInfoUndo: rs[0],
-        applayInfoAgree: rs[1],
-        applayInfoRefuse: rs[2],
-        loading: false
-      })
-    })
+      currentTabs: 0,
+      appreason: '',
+      apptime: '',
+      appclass: 0,
+      appfixtime: '',
+      appfixclass: 0
+    }, () => Taro.stopPullDownRefresh())
   }
 
   switchTabs(value: number) {
-    Taro.showLoading({
-      title: '拼命切换中...'
-    })
     this.setState({
       currentTabs: value
-    }, () => Taro.hideLoading())
+    })
+  }
+  handleAppotherreasonChange(value: string) {
+    this.setState({ appotherreason: value })
   }
 
-  genApplyItem(apply: Apply) {
-    const { btnloading } = this.state
+  handleAppreasonChange(value: string) {
+    this.setState({ appreason: value })
+  }
+
+  handleAppclassChange(value: number) {
+    this.setState({ appclass: value })
+  }
+
+  handleAppfixclassChange(value: number) {
+    this.setState({ appfixclass: value })
+  }
+
+  onApptimeChange = e => {
+    this.setState({
+      apptime: e.detail.value
+    })
+  }
+
+  onAppfixtimeChange = e => {
+    this.setState({
+      appfixtime: e.detail.value
+    })
+  }
+
+  genDutyApply() {
+    const {
+      btnloading,
+      appreason,
+      apptime,
+      appclass,
+      appfixtime,
+      appfixclass
+    } = this.state
     return (
-      <YGCardWithTitleTip
-        icon='user'
-        title={`${apply.applicantname} 于 ${apply.appdate} 提出申请`}
-        cardWidth='80%'
-        tipsStyle={{
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center'
-        }}
-        itemStyle={{
-          marginTop: '10px',
-          display: 'flex',
-          justifyContent: 'center'
-        }}
-        activeItemStyle={{
-          height: '92px'
-        }}
-        cardStyle={{
-          marginTop: '30rpx',
-          padding: '50rpx',
-          boxShadow: '2px 2px 3px rgba(0,0,0,0.4)',
-          maxHeight: '50vh',
-          overflow: 'auto'
-        }}
-      >
-        <View className='at-row head-info'>
-          <View className='at-col at-col-2'>
-            <AtAvatar image={`${YGURL.asset_url}${apply.applicanthead}`} size='small'></AtAvatar>
-          </View>
-          <View className='at-col'>
-            <View className='at-row'>
-              {apply.applicantname}
-            </View>
-            <View className='at-row'>
-              {apply.applicantstuid}
-            </View>
-          </View>
+      <View className='flex-column'>
+        <View className='flex-column' style='margin: 10px'>
+          <Text>请假原因:</Text>
+          <AtTextarea
+            count={false}
+            value={appreason}
+            onChange={this.handleAppreasonChange.bind(this)}
+            maxLength={1000}
+            height={200}
+            placeholder='请输入请假原因...'
+          />
         </View>
-        <View className='flex-column'>
-          {
-            apply.appclass === 0 ? undefined : (
-              <View className='flex-column'>
-                <Text>请假时间: {apply.apptime} 第{apply.appclass}大节</Text>
-                <Text>补值班时间: {apply.appfixtime} 第{apply.appfixclass}大节</Text>
-              </View>
-            )
-          }
-          <Text>申请{apply.appclass === 0 ? '内容' : '原因'}: {apply.appreason}</Text>
-          {
-            apply.state === 0
-            ? (
-              <View className='at-row' style='margin: 10px auto;'>
-                <View className='at-col at-col-6'>
-                  <AtButton
-                    className='agree-btn'
-                    disabled={btnloading}
-                    size='small'
-                    onClick={this.open.bind(this, apply, 1)}
-                  >
-                    批准
-                  </AtButton>
-                </View>
-                <View className='at-col at-col-6'>
-                  <AtButton
-                    className='refuse-btn'
-                    disabled={btnloading}
-                    size='small'
-                    onClick={this.open.bind(this, apply, 2)}
-                  >
-                    拒绝
-                  </AtButton>
-                </View>
-              </View>
-            )
-              : apply.state === 1
-                ? <Text className='handled' style='color:dodgerblue;'>已批准 处理人:{apply.handlername}</Text>
-                : <Text className='handled' style='color:red;'>已拒绝 处理人:{apply.handlername}</Text>
-          }
+        <View>
+          <Picker mode='date' onChange={this.onApptimeChange} value={apptime}>
+            <AtList>
+              <AtListItem title='请选择请假日期' extraText={apptime} />
+            </AtList>
+          </Picker>
         </View>
-      </YGCardWithTitleTip>
+        <View className='flex-column'
+          style={{
+            margin: '10px',
+            padding: '25px',
+            background: 'rgba(0,0,0,0.15)'
+          }}
+        >
+          <Text>请假课节：{appfixclass}</Text>
+          <AtSlider
+            step={1}
+            value={appfixclass}
+            max={4}
+            min={1}
+            activeColor='#007ACC'
+            backgroundColor='#BDBDBD'
+            blockColor='#007ACC'
+            blockSize={24}
+            onChange={this.handleAppfixclassChange.bind(this)}
+          ></AtSlider>
+        </View>
+        <View>
+          <Picker mode='date' onChange={this.onAppfixtimeChange} value={appfixtime}>
+            <AtList>
+              <AtListItem title='请选择补值班日期' extraText={appfixtime} />
+            </AtList>
+          </Picker>
+        </View>
+        <View className='flex-column'
+          style={{
+            margin: '10px',
+            padding: '25px',
+            background: 'rgba(0,0,0,0.15)'
+          }}
+        >
+          <Text>补值班课节：{appclass}</Text>
+          <AtSlider
+            step={1}
+            value={appclass}
+            max={4}
+            min={1}
+            activeColor='#007ACC'
+            backgroundColor='#BDBDBD'
+            blockColor='#007ACC'
+            blockSize={24}
+            onChange={this.handleAppclassChange.bind(this)}
+          ></AtSlider>
+        </View>
+        <AtButton
+          className='post-btn'
+          disabled={btnloading}
+          full
+          onClick={this.prePost.bind(this)}
+        >
+          提出申请
+        </AtButton>
+      </View>
     )
   }
 
-  genApply(type: 0 | 1 | 2) {
+  genOtherApply() {
     const {
-      applayInfoUndo,
-      applayInfoAgree,
-      applayInfoRefuse,
-      loadingMore,
-      currentTabs
+      btnloading,
+      appotherreason,
     } = this.state
-    const map = [
-      applayInfoUndo,
-      applayInfoAgree,
-      applayInfoRefuse
-    ]
     return (
-      <View>
-        {
-          map[type].length
-            ? map[type].map(apply => (
-              <View key={apply.aid}>
-                {this.genApplyItem(apply)}
-              </View>
-            ))
-            : <View className='none'>暂时没有啦 ♪(＾∀＾●)ﾉ</View>
-        }
-        {
-          type === 1 && currentTabs === 1 && loadingMore
-            ? <View className='none'>加载中...</View>
-            : undefined
-        }
+      <View className='flex-column'>
+        <AtTextarea
+          count={false}
+          value={appotherreason}
+          onChange={this.handleAppotherreasonChange.bind(this)}
+          maxLength={1000}
+          height={200}
+          placeholder='请输入申请内容...'
+        />
+        <AtButton
+          className='post-btn'
+          disabled={btnloading}
+          full
+          onClick={this.prePost.bind(this)}
+        >
+          提出申请
+        </AtButton>
       </View>
     )
   }
 
   render() {
-    const {
-      isOpened,
-      loading,
-      currentTabs,
-      currentApplyState,
-      currentApply,
-      currentUser
-    } = this.state
+    const { currentTabs } = this.state
     const tabList = [
       {
-        title: '待处理申请'
+        title: '值班请假'
       },
       {
-        title: '已同意申请'
-      },
-      {
-        title: '已拒绝申请'
+        title: '其他申请'
       }
     ]
     return (
-      <View className='page yg-background'>
-        {
-          loading
-            ? (
-              <View className='loading'>
-                <View style='display: flex;margin: 0 auto;align-items:center;'>
-                  <AtIcon value='loading-3' size='25' color='#333' className='span'></AtIcon>
-                  <View className='at-col ml-10'>加载中...</View>
-                </View>
-              </View>
-            )
-            : (
-              <View className='height100'>
-                <AtTabs
-                  className='fixedTab'
-                  current={currentTabs}
-                  tabList={tabList}
-                  onClick={this.switchTabs.bind(this)}
-                >
-                </AtTabs>
-                <View className='height100'>
-                  {this.genApply(currentTabs as (0 | 1 | 2))}
-                </View>
-              </View>
-            )
-        }
-        <AtModal isOpened={isOpened}>
-          <AtModalHeader>处理请求</AtModalHeader>
-          <AtModalContent>
-            <Text style='display: flex'>
-              <Text>确定要</Text>
-              {
-                currentApplyState === 1
-                  ? <Text style='color:#007ACC'>批准这条申请吗 o(*￣▽￣*)ブ?</Text>
-                  : <Text style='color:#E64949'>拒绝这条申请吗 ◔ ‸◔?</Text>
-              }
-            </Text>
-            <View className='flex-column' style={{
-                margin: '10px 0',
-                padding: '10px',
-                background: 'rgba(0,0,0,0.15)'
-              }}
-            >
-              {
-                currentApply.appclass === 0 ? undefined : (
-                  <View className='flex-column'>
-                    <Text>请假时间: {currentApply.apptime} 第{currentApply.appclass}大节</Text>
-                    <Text>补值班时间: {currentApply.appfixtime} 第{currentApply.appfixclass}大节</Text>
-                  </View>
-                )
-              }
-              <Text>申请 {currentApply.appclass === 0 ? '内容' : '原因'}: {currentApply.appreason}</Text>
-            </View>
-          </AtModalContent>
-          <AtModalAction>
-            <Button onClick={this.close.bind(this)}>取消</Button>
-            <Button onClick={this.handleApply.bind(this, currentUser.stuid, currentApply, currentApplyState)}>确定</Button>
-          </AtModalAction>
-        </AtModal>
+      <View className='page-post-apply-list yg-background'>
+        <AtTabs
+          current={currentTabs}
+          tabList={tabList}
+          onClick={this.switchTabs.bind(this)}
+        >
+          <AtTabsPane current={currentTabs} index={0} >
+            {this.genDutyApply()}
+          </AtTabsPane>
+          <AtTabsPane current={currentTabs} index={1} >
+            {this.genOtherApply()}
+          </AtTabsPane>
+        </AtTabs>
       </View>
     )
   }

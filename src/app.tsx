@@ -33,6 +33,7 @@ class App extends Component {
       'pages/duty/myduty',
       'pages/duty/autoquery',
       'pages/duty/modifyduty',
+      'pages/duty/downloaddutylist',
       'pages/usermanager/index',
       'pages/supermanager/wifioption',
       'pages/supermanager/locationlimit',

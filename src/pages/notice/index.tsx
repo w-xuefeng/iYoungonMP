@@ -83,6 +83,7 @@ export default class NoticeRecent extends Component<{}, NoticeRecentState> {
     }, () => {
       getNoticeByPage(0).then((rs: Notice[]) => {
         this.setState({ noticeList: rs, loading: false })
+        Taro.stopPullDownRefresh()
       })
     })
   }

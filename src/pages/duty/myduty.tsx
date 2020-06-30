@@ -68,6 +68,7 @@ export default class MyDuty extends Component<{}, MyDutyState> {
         dutyInfo: duty,
         loading: false
       })
+      Taro.stopPullDownRefresh()
     })
   }
 

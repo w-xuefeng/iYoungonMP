@@ -42,7 +42,7 @@ export default class Apply {
   /**
   * 申请状态 0代表未处理 1代表同意 2代表拒绝
   */
-  public state: 0 | 1;
+  public state: 0 | 1 | 2;
   /**
   * 处理日期
   */

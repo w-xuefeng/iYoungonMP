@@ -343,6 +343,17 @@ export const getApplyByType = (type: 'unapproved' | 'refuse') => {
 };
 
 /**
+ * @function 获取某人申请
+ * */
+export const getApplyByStuid = (stuid: number | string) => {
+  const opt: HttpRequestOption = {
+    url: `${YGURL.get_apply_by_stuid}/?stuid=${stuid}`,
+    method: 'GET'
+  };
+  return ReqAnyData(opt);
+};
+
+/**
  * @function 分页获取已同意的申请
  * */
 export const getApprovalApply = (page: number) => {
@@ -436,6 +447,48 @@ export const sendEmailToCurYoungoner = ({ type, title, content }: {
     url: `${YGURL.post_email}/post/curyoungon`,
     method: 'POST',
     data: { type, title, content }
+  };
+  return Req(opt);
+};
+
+/**
+ * @function 向当管理员发送邮件
+ * */
+export const sendEmailToAdmins = ({ type, title, content }: {
+  type: number;
+  title: string;
+  content: string;
+}) => {
+  const opt: HttpRequestOption = {
+    url: `${YGURL.post_email}/post/admins`,
+    method: 'POST',
+    data: { type, title, content }
+  };
+  return Req(opt);
+};
+
+/**
+ * @function 提出申请
+ * */
+export const postApply = ({
+  stuid,
+  reason,
+  apptime,
+  appclass,
+  appfixtime,
+  appfixclass
+}: {
+  stuid: string | number;
+  reason: string;
+  apptime: string;
+  appclass: number;
+  appfixtime: string;
+  appfixclass: number;
+}) => {
+  const opt: HttpRequestOption = {
+    url: YGURL.post_apply,
+    method: 'POST',
+    data: { stuid, reason, apptime, appclass, appfixtime, appfixclass }
   };
   return Req(opt);
 };

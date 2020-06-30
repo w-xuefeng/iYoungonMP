@@ -8,8 +8,6 @@ import YGHeader from '@/components/YGHeader'
 import YGCardWithTitleTip from '@/components/YGCardWithTitleTip'
 import './index.scss'
 
-
-
 type AutoQueryDutyState = {
   loading: boolean;
   keywords: string;
