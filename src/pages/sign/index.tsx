@@ -122,11 +122,14 @@ export default class Sign extends Component<{}, SignPageStateType> {
 
   componentWillMount () {
     this.refreshPage()
+    Taro.eventCenter.on('refreshPage', () => this.refreshPage())
   }
 
   componentDidMount () {}
 
-  componentWillUnmount () {}
+  componentWillUnmount () {
+    Taro.eventCenter.off('refreshPage')
+  }
 
   componentDidShow () { }
 

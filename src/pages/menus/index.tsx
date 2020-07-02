@@ -33,6 +33,7 @@ export default class MenusPage extends Component<{}, YGMyStateType> {
     navigationStyle: 'custom',
     navigationBarTextStyle: 'white',
     backgroundColor: '#1F3BA6',
+    enablePullDownRefresh: true
   }
 
   headerConfig = {
@@ -48,23 +49,33 @@ export default class MenusPage extends Component<{}, YGMyStateType> {
       user: new User
     }
   }
+
   componentWillMount () {
+    Taro.eventCenter.on('refreshPage', () => this.getUser())
     this.getStatusBarHeight()
     this.getUser()
   }
 
   componentDidMount () { }
 
-  componentWillUnmount () { }
+  componentWillUnmount () {
+    Taro.eventCenter.off('refreshPage')
+  }
 
   componentDidShow () { }
 
   componentDidHide () { }
 
+  onPullDownRefresh() {
+    this.getUser()
+  }
+
   getUser() {
     const user: User = LocalData.getItem(LDKey.USER)
     if (user) {
-      this.setState({ user })
+      this.setState({ user }, () => {
+        Taro.stopPullDownRefresh()
+      })
     } else {
       Taro.redirectTo({
         url: accountPagePath

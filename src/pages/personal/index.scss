@@ -1,0 +1,66 @@
+@import '~@/background.scss';
+
+page {
+  height: 100%;
+}
+.page-personal-center {
+  width: 100%;
+  min-height: 100%;
+  padding-bottom: 20%;
+  box-sizing: border-box;
+}
+
+.at-modal__container {
+  width: 90%;
+}
+
+.head-top {
+  width: 100%;
+  height: 400px;
+  position: relative;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  .cover {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .headimg {
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
+  }
+}
+.info-bottom {
+  width: 100%;
+  margin-bottom: 20px;
+  .at-list__item-content {
+    flex: none;
+    margin-right: 17vw;
+    margin-left: 1vw;
+  }
+  .item-extra__info {
+    color: #000000;
+  }
+}
+
+.logout-btn {
+  width: 95%;
+  margin: 20px auto;
+  background: transparent;
+  color: #ff0000;
+  border: 1px solid #ff0000;
+  border-radius: 10px;
+}

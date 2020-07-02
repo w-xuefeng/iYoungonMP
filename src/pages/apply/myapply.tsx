@@ -12,8 +12,6 @@ import { getApplyByStuid } from '@/api'
 import YGCardWithTitleTip from '@/components/YGCardWithTitleTip'
 import './index.scss'
 
-
-
 type MyApplyListState = {
   loading: boolean;
   currentTabs: number;

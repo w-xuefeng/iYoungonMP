@@ -25,6 +25,8 @@ class App extends Component {
       'pages/sign/index',
       'pages/menus/index',
       'pages/signdetail/index',
+      'pages/personal/index',
+      'pages/resume/index',
       'pages/notice/index',
       'pages/notice/post',
       'pages/apply/index',

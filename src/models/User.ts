@@ -28,6 +28,7 @@ export class User {
   ulevel?: number;
   wxid?: null | string;
   xgtoken?: null | string;
+  interviewform?: null | string;
   constructor() {}
 }
 

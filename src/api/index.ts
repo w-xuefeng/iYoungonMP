@@ -492,3 +492,16 @@ export const postApply = ({
   };
   return Req(opt);
 };
+
+
+/**
+ * @function 上传图片
+ * */
+export const uploadImage = (type: 'head' | 'img', value: string) => {
+  const opt: HttpRequestOption = {
+    url: `${YGURL.post_upload_img}?type=${type}`,
+    method: 'POST',
+    data: { [type]: value }
+  }
+  return Req(opt)
+}

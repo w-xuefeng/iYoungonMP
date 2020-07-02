@@ -192,6 +192,25 @@ export const sex2Name = (sex: number): string => {
 }
 
 /**
+ * 性别 Map
+ */
+export const sexMap = [
+  { text: '保密', value: 0 },
+  { text: '男', value: 1 },
+  { text: '女', value: 2 }
+];
+
+/**
+ * 部门 Array
+ */
+export const departmentArray = [
+  '开发部',
+  '企划部',
+  '信息部',
+  '运营部'
+]
+
+/**
  * 用户信息标志转换为名称
  */
 export const handelUserInfo = (user: User): User => {
@@ -289,12 +308,22 @@ export function getNowTime () {
 /**
  * 函数防抖
  */
-export function debounce(fn: Function, wait: number) {
-  let timer: null | number = null;
-  return function() {
-    if (timer !== null) {
-      clearTimeout(timer);
+export function debounce(func: Function, wait: number, immediate?: boolean) {
+  let timeout: any;
+  return function () {
+    const context = this;
+    const args = arguments;
+    if (timeout) clearTimeout(timeout);
+    if (immediate) {
+      const callNow = !timeout;
+      timeout = setTimeout(() => {
+        timeout = null;
+      }, wait)
+      if (callNow) func.apply(context, args)
+    } else {
+      timeout = setTimeout(function() {
+        func.apply(context, args);
+      }, wait);
     }
-    timer = setTimeout(fn, wait);
-  };
+  }
 }

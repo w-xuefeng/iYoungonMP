@@ -55,7 +55,7 @@ export default class YGLastNotice extends Component<YGLastNoticePropsType> {
                 justifyContent: 'flex-end'
               }}
               activeItemStyle={{
-                transform: 'rotate(90deg) translate(36%, 200%)'
+                transform: 'rotate(90deg) translate(38%, 52vw)'
               }}
             >
               <RichText nodes={notice.content} space='nbsp'></RichText>

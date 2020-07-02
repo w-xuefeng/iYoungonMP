@@ -65,11 +65,13 @@ export default class Index extends Component<{}, IndexPageStateType> {
   componentDidMount () {
     Taro.eventCenter.on('signEvent', () => this.refreshPage())
     Taro.eventCenter.on('pubNoticeEvent', () => this.refreshPage())
+    Taro.eventCenter.on('refreshPage', () => this.refreshPage())
   }
 
   componentWillUnmount () {
     Taro.eventCenter.off('signEvent')
     Taro.eventCenter.off('pubNoticeEvent')
+    Taro.eventCenter.off('refreshPage')
   }
 
   componentDidShow () { }

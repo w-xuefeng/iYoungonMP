@@ -233,4 +233,11 @@ export class YGURL {
    * @method: POST
    */
   static post_apply = `${BaseUrl}/application/post`
+
+  /**
+   * @function: 上传图片
+   * @param： { head }
+   * @method: POST
+   */
+  static post_upload_img = `${BaseUrl}/static/assets/up/upload.php`
 }

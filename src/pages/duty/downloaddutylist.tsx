@@ -71,25 +71,6 @@ export default class DutyDownload extends Component<{}, DutyDownloadState> {
 
   componentDidHide() { }
 
-  handleClass(data: DutyInfo[], $weekClass: string[][][], week: number, i: number, j: number) {
-    switch (data[i].class[j]) {
-      case 1:
-        $weekClass[week][0].push(data[i].name)
-        break;
-      case 2:
-        $weekClass[week][1].push(data[i].name)
-        break;
-      case 3:
-        $weekClass[week][2].push(data[i].name)
-        break;
-      case 4:
-        $weekClass[week][3].push(data[i].name)
-        break;
-      default: break;
-    }
-    return $weekClass;
-  }
-
   handleWeekClass(data: DutyInfo[]) {
     let $weekClass: string[][][] = [
       [
@@ -110,29 +91,18 @@ export default class DutyDownload extends Component<{}, DutyDownloadState> {
     ];
     for (let i = 0; i < data.length; i++) {
       for (let j = 0; j < data[i].week.length; j++) {
-        switch (data[i].week[j]) {
-          case 1: //星期一
-            $weekClass = this.handleClass(data, $weekClass, 0, i, j)
-            break;
-          case 2: //星期二
-            $weekClass = this.handleClass(data, $weekClass, 1, i, j)
-            break;
-          case 3: //星期三
-            $weekClass = this.handleClass(data, $weekClass, 2, i, j)
-            break;
-          case 4: //星期四
-            $weekClass = this.handleClass(data, $weekClass, 3, i, j)
-            break;
-          case 5: //星期五
-            $weekClass = this.handleClass(data, $weekClass, 4, i, j)
-            break;
-          default: break;
+        if (
+          [1, 2, 3, 4, 5].includes(data[i].week[j])
+          && [1, 2, 3, 4].includes(data[i].class[j])
+        ) {
+          const weekIndex = data[i].week[j] - 1
+          const classIndex = data[i].class[j] - 1
+          $weekClass[weekIndex][classIndex].push(data[i].name)
         }
       }
     }
     return $weekClass;
   }
-
 
   handleData(rs: DutyInfo[]) {
     const handle = (resolve: ((data: string[][][]) => void)) => {
@@ -161,10 +131,26 @@ export default class DutyDownload extends Component<{}, DutyDownloadState> {
       url: YGURL.get_duty_excel,
       success: res => {
         if (res.statusCode === 200) {
-          Taro.openDocument({ filePath: res.tempFilePath, showMenu: true })
+          Taro.openDocument({
+            filePath: res.tempFilePath,
+            showMenu: true,
+            complete: _ => {
+              this.setState({ btnloading: false })
+            },
+            fail: _ => {
+              Taro.showToast({
+                title: '文件打开失败',
+                icon: 'none'
+              })
+            }
+          })
         }
       },
-      complete: _ => {
+      fail: _ => {
+        Taro.showToast({
+          title: '网络请求错误',
+          icon: 'none'
+        })
         this.setState({ btnloading: false })
       }
     })

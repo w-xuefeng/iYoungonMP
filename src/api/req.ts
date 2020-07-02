@@ -33,6 +33,8 @@ export interface HttpResponOption {
   msg?: string
   Rcode?: string
   count?: number
+  imgurl?: string
+  head?:string
 }
 
 export const Req = (opt: HttpRequestOption) => {
