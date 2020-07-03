@@ -6,7 +6,6 @@ import {
   AtTabs,
   AtIcon
 } from 'taro-ui'
-import { YGURL } from '@/api/url'
 import { LocalData, LDKey } from '@/utils/index'
 import { getApplyByStuid } from '@/api'
 import YGCardWithTitleTip from '@/components/YGCardWithTitleTip'
@@ -117,7 +116,7 @@ export default class MyApplyList extends Component<{}, MyApplyListState> {
       >
         <View className='at-row head-info'>
           <View className='at-col at-col-2'>
-            <AtAvatar image={`${YGURL.asset_url}${apply.applicanthead}`} size='small'></AtAvatar>
+            <AtAvatar image={LocalData.getItem(LDKey.USER).fullhead} size='small'></AtAvatar>
           </View>
           <View className='at-col'>
             <View className='at-row'>

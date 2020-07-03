@@ -99,6 +99,7 @@ export default class PersonalCenter extends Component<{}, PersonalCenterState> {
     this.setOnline(Number(user.online) === 1)
     LocalData.setItem(LDKey.USER, curUser)
     LocalData.setItem(LDKey.TIMESTAMP, new Date().getTime())
+    Taro.eventCenter.trigger('refreshPage')
   }
 
   setOnline(online: boolean) {
@@ -211,9 +212,9 @@ export default class PersonalCenter extends Component<{}, PersonalCenterState> {
 
   modifyHead() {
     Taro.chooseImage({
-      count: 1, // 默认9
-      sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
-      sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有，在H5浏览器端支持使用 `user` 和 `environment`分别指定为前后摄像头
+      count: 1,
+      sizeType: ['compressed'],
+      sourceType: ['album', 'camera'],
       success: (res) => {
         const tempFilePaths = res.tempFilePaths
         const headBase64 = Taro
@@ -225,14 +226,13 @@ export default class PersonalCenter extends Component<{}, PersonalCenterState> {
             const { stuid } = this.state
             const info = 'head'
             const value = rs.head
-            modifyUserInfo({ stuid, info, value }).then(data => {              
+            modifyUserInfo({ stuid, info, value }).then(data => {
               if (data.status) {
                 this.setLocalData({ head: value })
-                Taro.eventCenter.trigger('refreshPage')
                 this.refreshPage().then(() => {
                   Taro.hideLoading()
                   Taro.showToast({ title: `头像修改成功`, icon: 'success' })
-                })                
+                })
               } else {
                 Taro.hideLoading()
                 Taro.showToast({ title: `网络错误`, icon: 'none' })
@@ -291,6 +291,24 @@ export default class PersonalCenter extends Component<{}, PersonalCenterState> {
             type='text'
             placeholder={stuid}
             value={stuid}
+            disabled
+            onChange={this.noop}
+          />
+          <AtInput
+            name='用户类型'
+            title='用户类型'
+            type='text'
+            placeholder={utypeName}
+            value={utypeName}
+            disabled
+            onChange={this.noop}
+          />
+          <AtInput
+            name='当前职位'
+            title='当前职位'
+            type='text'
+            placeholder={positionName}
+            value={positionName}
             disabled
             onChange={this.noop}
           />
@@ -400,24 +418,6 @@ export default class PersonalCenter extends Component<{}, PersonalCenterState> {
                 3000
               ).bind(this, '手机号码', 'phone')
             }
-          />
-          <AtInput
-            name='用户类型'
-            title='用户类型'
-            type='text'
-            placeholder={utypeName}
-            value={utypeName}
-            disabled
-            onChange={this.noop}
-          />
-          <AtInput
-            name='当前职位'
-            title='当前职位'
-            type='text'
-            placeholder={positionName}
-            value={positionName}
-            disabled
-            onChange={this.noop}
           />
         </View>
         <AtButton

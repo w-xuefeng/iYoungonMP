@@ -493,7 +493,6 @@ export const postApply = ({
   return Req(opt);
 };
 
-
 /**
  * @function 上传图片
  * */
@@ -505,3 +504,21 @@ export const uploadImage = (type: 'head' | 'img', value: string) => {
   }
   return Req(opt)
 }
+
+/**
+ * @function 修改用户证件照
+ * */
+export const modifyUserPhoto = ({
+  stuid,
+  photo
+}: {
+  stuid: number | string;
+  photo: string;
+}) => {
+  const opt: HttpRequestOption = {
+    url: `${YGURL.patch_user_info}/uploadPhoto`,
+    method: 'PUT',
+    data: { stuid, photo }
+  };
+  return Req(opt);
+};
