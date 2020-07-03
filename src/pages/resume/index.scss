@@ -6,6 +6,7 @@ page {
 .page-resume {
   width: 100%;
   min-height: 100%;
+  padding-top: 30px;
   padding-bottom: 20%;
   box-sizing: border-box;
   .head-top {
@@ -13,10 +14,9 @@ page {
     height: 600px;
     position: relative;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    background-color: #999999;
+    justify-content: space-around;
+    background-color: rgba(238,238,238,0.55);
     .photo {
       width: 295px;
       height: 413px;
@@ -24,18 +24,41 @@ page {
       background-position: center center;
       background-size: cover;
       border: 2px solid #ffffff;
+      margin: 10px;
+    }
+    .right-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      &-item {
+        font-size: 20px;
+        margin: 5px;
+        &-tips {
+          color: #1890ff;
+        }
+      }
     }
   }
   .info-bottom {
     width: 100%;
     margin-bottom: 20px;
-    .at-list__item-content {
-      flex: none;
-      margin-right: 17vw;
-      margin-left: 1vw;
-    }
-    .item-extra__info {
-      color: #000000;
+    background-color: rgba(238,238,238,0.55);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+    .flex-column {
+      display: flex;
+      flex-direction: column;
+      .other-title {
+        color: #1890ff;
+        margin: 10px 0 5px 0;
+      }
+      .other-content {
+        margin: 5px 0 10px 0;
+        padding-left: 15px;
+      }
     }
   }
   .save-btn {
@@ -48,4 +71,6 @@ page {
   }
 }
 
-
+.resume-mr-10 {
+  margin-right: 10px;
+}
