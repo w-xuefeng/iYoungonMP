@@ -278,10 +278,25 @@ $cell-height: 150px;
   padding: 20px 0;
 }
 
+.down-btn-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .down-btn {
   width: 95%;
   margin: 20px auto;
   background: #007ACC;
   color: #FFFFFF;
   border-radius: 10px;
+}
+
+.down-btn-text {
+  color: #007ACC;
+  text-align: center;
+  font-size: 18px;
+  width: 80%;
+  word-break: break-all;
 }

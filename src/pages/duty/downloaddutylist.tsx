@@ -1,5 +1,5 @@
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
 import { AtIcon, AtButton } from 'taro-ui'
 import { YGURL } from '@/api/url'
 import { DutyInfo } from '@/models'
@@ -10,6 +10,7 @@ type DutyDownloadState = {
   loading: boolean;
   btnloading: boolean;
   weekClass: string[][][];
+  filePath: string;
 }
 
 export default class DutyDownload extends Component<{}, DutyDownloadState> {
@@ -35,6 +36,7 @@ export default class DutyDownload extends Component<{}, DutyDownloadState> {
     this.state = {
       btnloading: false,
       loading: true,
+      filePath: '',
       weekClass: [
         [
           [], [], [], []
@@ -131,19 +133,8 @@ export default class DutyDownload extends Component<{}, DutyDownloadState> {
       url: YGURL.get_duty_excel,
       success: res => {
         if (res.statusCode === 200) {
-          Taro.openDocument({
-            filePath: res.tempFilePath,
-            showMenu: true,
-            complete: _ => {
-              this.setState({ btnloading: false })
-            },
-            fail: _ => {
-              Taro.showToast({
-                title: '文件打开失败',
-                icon: 'none'
-              })
-            }
-          })
+          this.setState({ filePath: res.tempFilePath })
+          this.openFile(res.tempFilePath)
         }
       },
       fail: _ => {
@@ -156,19 +147,47 @@ export default class DutyDownload extends Component<{}, DutyDownloadState> {
     })
   }
 
+  openFile(path: string) {
+    if (!path) return
+    Taro.openDocument({
+      filePath: path,
+      fileType: 'xlsx',
+      showMenu: true,
+      complete: _ => {
+        this.setState({ btnloading: false })
+      },
+      fail: _ => {
+        Taro.showToast({
+          title: '文件打开失败',
+          icon: 'none'
+        })
+      }
+    })
+  }
+
   genDownBtn() {
-    const { btnloading } = this.state
+    const { btnloading, filePath } = this.state
     return (
-      <AtButton
-        loading={btnloading}
-        disabled={btnloading}
-        type='primary'
-        onClick={this.downLoad.bind(this)}
-        full
-        className='down-btn'
-      >
-        {btnloading ? '导出中...' : '导出 Excel'}
-      </AtButton>
+      <View className='down-btn-wrap'>
+        <View style='width: 100%;'>
+          <AtButton
+            loading={btnloading}
+            disabled={btnloading}
+            type='primary'
+            onClick={this.downLoad.bind(this)}
+            className='down-btn'
+            full
+          >
+            {btnloading ? '导出中...' : '导出 Excel'}
+          </AtButton>
+        </View>
+        <Text
+          onClick={this.openFile.bind(this, filePath)}
+          className='down-btn-text'
+        >
+          {filePath ? `文件已保存到 ${filePath}` : ''}
+        </Text>
+      </View>
     )
   }
   genDutyInfo() {

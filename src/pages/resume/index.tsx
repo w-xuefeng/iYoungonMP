@@ -6,12 +6,10 @@ import { LocalData, LDKey, handelUserInfo } from '@/utils/index'
 import { modifyUserPhoto, getUserInfo, modifyUserInfo } from '@/api'
 import './index.scss'
 
-
 /**
  * 默认1寸证件照
  */
 const defaultPhoto = 'https://pub.wangxuefeng.com.cn/asset/defaultHead/1c.jpg'
-
 
 const baseInfo = [
   {
