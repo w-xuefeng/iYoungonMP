@@ -25,16 +25,6 @@ export default class YGLastNotice extends Component<YGLastNoticePropsType> {
     super(props)
   }
 
-  componentWillMount() { }
-
-  componentDidMount() { }
-
-  componentWillUnmount() { }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
-
   render() {
     const { notice } = this.props
     return (

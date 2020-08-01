@@ -62,16 +62,6 @@ export default class YGRegister extends Component<any, YGRegisterStateType> {
     }
   }
 
-  componentWillMount() { }
-
-  componentDidMount() { }
-
-  componentWillUnmount() { }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
-
   handleChangeStuid(value: any) {
     this.setState({
       stuid: value
@@ -221,7 +211,7 @@ export default class YGRegister extends Component<any, YGRegisterStateType> {
         LocalData.setItem(LDKey.TIMESTAMP, new Date().getTime())
         gotoIndex()
       }
-    })    
+    })
   }
 
   render() {
@@ -233,7 +223,7 @@ export default class YGRegister extends Component<any, YGRegisterStateType> {
           title='学号'
           type='number'
           placeholder='请输入学号'
-          value={stuid}
+          value={String(stuid)}
           maxLength={8}
           onChange={this.handleChangeStuid.bind(this)}
         />
@@ -248,7 +238,7 @@ export default class YGRegister extends Component<any, YGRegisterStateType> {
         <AtInput
           name='email'
           title='邮箱'
-          type='email'
+          type='text'
           placeholder='请输入邮箱'
           value={email}
           onChange={this.handleChangeEmail.bind(this)}
@@ -294,7 +284,7 @@ export default class YGRegister extends Component<any, YGRegisterStateType> {
               placeholder='注册码'
               value={vcode}
               onChange={this.handleChangeVcode.bind(this)}
-            /> 
+            />
           </View>
         )}
         <AtButton

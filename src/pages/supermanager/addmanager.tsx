@@ -36,16 +36,6 @@ export default class AddAdmin extends Component<{}, {
     }
   }
 
-  componentWillMount() {}
-
-  componentDidMount() { }
-
-  componentWillUnmount() { }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
-
   handleChangeStuid(value: string) {
     this.setState({
       stuid: value

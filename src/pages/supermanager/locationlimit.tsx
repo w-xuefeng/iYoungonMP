@@ -48,17 +48,9 @@ export default class LocationLimit extends Component<{}, {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.refreshPage()
   }
-
-  componentDidMount() { }
-
-  componentWillUnmount() { }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
 
   noop = () => {}
 

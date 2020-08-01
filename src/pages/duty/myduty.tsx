@@ -41,21 +41,13 @@ export default class MyDuty extends Component<{}, MyDutyState> {
     }
   }
 
-  componentWillMount () {
-    this.initPage()
-  }
-
   onPullDownRefresh() {
     this.initPage()
   }
 
-  componentDidMount () {}
-
-  componentWillUnmount () {}
-
-  componentDidShow () { }
-
-  componentDidHide () {}
+  componentDidMount () {
+    this.initPage()
+  }
 
   initPage() {
     this.setState({ loading: true })

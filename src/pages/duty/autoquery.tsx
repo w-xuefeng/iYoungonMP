@@ -40,17 +40,9 @@ export default class AutoQueryDuty extends Component<{}, AutoQueryDutyState> {
     }
   }
 
-  componentWillMount () {
+  componentDidMount () {
     this.initPage()
   }
-
-  componentDidMount () {}
-
-  componentWillUnmount () {}
-
-  componentDidShow () { }
-
-  componentDidHide () {}
 
   initPage() {
     this.setState({ loading: true })

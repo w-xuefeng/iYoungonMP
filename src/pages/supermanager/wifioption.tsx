@@ -38,17 +38,9 @@ export default class WifiOptions extends Component<{}, {
     }
   }
 
-  componentWillMount () {
+  componentDidMount () {
     this.refreshPage()
   }
-
-  componentDidMount () {}
-
-  componentWillUnmount () {}
-
-  componentDidShow () { }
-
-  componentDidHide () {}
 
   getConnectedWifi() {
     return Taro.startWifi({

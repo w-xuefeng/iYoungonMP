@@ -120,20 +120,14 @@ export default class Sign extends Component<{}, SignPageStateType> {
     }
   }
 
-  componentWillMount () {
+  componentDidMount () {
     this.refreshPage()
     Taro.eventCenter.on('refreshPage', () => this.checkOnline())
   }
 
-  componentDidMount () {}
-
   componentWillUnmount () {
     Taro.eventCenter.off('refreshPage')
   }
-
-  componentDidShow () { }
-
-  componentDidHide () {}
 
   toast(title: string, icon: 'loading' | 'success' | 'none' = 'none', duration: number = 2000) {
     Taro.showToast({ title, icon, duration })

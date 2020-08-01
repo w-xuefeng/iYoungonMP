@@ -130,17 +130,9 @@ export default class ModifyDuty extends Component<{}, {
     }
   }
 
-  componentWillMount () {
+  componentDidMount () {
     this.refreshPage()
   }
-
-  componentDidMount () {}
-
-  componentWillUnmount () {}
-
-  componentDidShow () { }
-
-  componentDidHide () {}
 
   close() {
     this.setState({

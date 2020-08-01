@@ -42,16 +42,6 @@ export default class NoticePoster extends Component<{}, NoticePosterState> {
     }
   }
 
-  componentWillMount() { }
-
-  componentDidMount() { }
-
-  componentWillUnmount() { }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
-
   handleNoticeContentChange(value: string) {
     this.setState({
       noticeContent: value

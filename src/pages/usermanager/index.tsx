@@ -172,17 +172,9 @@ export default class UserManager extends Component<{}, {
     }
   }
 
-  componentWillMount () {
+  componentDidMount () {
     this.refreshPage()
   }
-
-  componentDidMount () {}
-
-  componentWillUnmount () {}
-
-  componentDidShow () { }
-
-  componentDidHide () {}
 
   close() {
     this.setState({

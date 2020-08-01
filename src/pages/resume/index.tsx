@@ -126,17 +126,9 @@ export default class MyResume extends Component<{}, MyResumeState> {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.refreshPage()
   }
-
-  componentDidMount() { }
-
-  componentWillUnmount() { }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
 
   onPullDownRefresh() {
     this.refreshPage()

@@ -49,17 +49,9 @@ export default class MyApplyList extends Component<{}, MyApplyListState> {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.initPage()
   }
-
-  componentDidMount() { }
-
-  componentWillUnmount() { }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
 
   onPullDownRefresh() {
     this.initPage()

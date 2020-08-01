@@ -50,21 +50,15 @@ export default class MenusPage extends Component<{}, YGMyStateType> {
     }
   }
 
-  componentWillMount () {
+  componentDidMount () {
     Taro.eventCenter.on('refreshPage', () => this.getUser())
     this.getStatusBarHeight()
     this.getUser()
   }
 
-  componentDidMount () { }
-
   componentWillUnmount () {
     Taro.eventCenter.off('refreshPage')
   }
-
-  componentDidShow () { }
-
-  componentDidHide () { }
 
   onPullDownRefresh() {
     this.getUser()

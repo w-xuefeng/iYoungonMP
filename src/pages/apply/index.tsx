@@ -60,17 +60,9 @@ export default class AddApply extends Component<{}, AddApplyListState> {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.initPage()
   }
-
-  componentDidMount() { }
-
-  componentWillUnmount() { }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
 
   onPullDownRefresh() {
     this.initPage()

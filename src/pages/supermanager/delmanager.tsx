@@ -62,17 +62,9 @@ export default class DelAdmin extends Component<{}, {
     }
   }
 
-  componentWillMount () {
+  componentDidMount() {
     this.refreshPage()
   }
-
-  componentDidMount () {}
-
-  componentWillUnmount () {}
-
-  componentDidShow () { }
-
-  componentDidHide () {}
 
   close() {
     this.setState({

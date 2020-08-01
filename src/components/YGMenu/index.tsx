@@ -33,16 +33,6 @@ export default class YGMenu extends Component<YGMenuPropsType> {
     super(props)
   }
 
-  componentWillMount () { }
-
-  componentDidMount () { }
-
-  componentWillUnmount () { }
-
-  componentDidShow () { }
-
-  componentDidHide () { }
-
   gotoSomeWhere(url: string) {
     Taro.navigateTo({ url })
   }

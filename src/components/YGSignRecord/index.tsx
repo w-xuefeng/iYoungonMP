@@ -30,16 +30,6 @@ export default class YGSignRecord extends Component<YGSignRecordPropsType, YGSig
     }
   }
 
-  componentWillMount() { }
-
-  componentDidMount() { }
-
-  componentWillUnmount() { }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
-
   handleClick(value) {
     this.setState({
       currentTabs: value

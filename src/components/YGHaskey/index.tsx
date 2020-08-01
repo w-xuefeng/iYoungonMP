@@ -20,16 +20,6 @@ export default class YGHaskey extends Component<YGHaskeyPropsType> {
     super(props)
   }
 
-  componentWillMount() { }
-
-  componentDidMount() { }
-
-  componentWillUnmount() { }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
-
   callPhone(phoneNumber: string) {
     if (phoneNumber) {
       Taro.makePhoneCall({ phoneNumber })

@@ -40,16 +40,6 @@ export default class AccountSetting extends Component<{}, AccountSettingStateTyp
     this.login()
   }
 
-  componentWillMount() { }
-
-  componentDidMount() { }
-
-  componentWillUnmount() { }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
-
   switchTabs(value: number) {
     this.setState({
       currentRegOrBindTabs: value

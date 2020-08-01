@@ -34,10 +34,6 @@ export default class YGHeader extends Component<YGHeaderPropsType, YGHeaderState
     this.getStatusBarHeight()
   }
 
-  componentDidMount() { }
-
-  componentWillUnmount() { }
-
   getStatusBarHeight() {
     const { statusBarHeight, screenHeight, screenWidth } = Taro.getSystemInfoSync()
     LocalData.setItem(LDKey.SCREEN, { screenHeight, screenWidth })
@@ -45,10 +41,6 @@ export default class YGHeader extends Component<YGHeaderPropsType, YGHeaderState
       statusBarHeight: `${statusBarHeight + 5}px`
     })
   }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
 
   backOrClosePage() {
     Taro.navigateBack().catch(() => {

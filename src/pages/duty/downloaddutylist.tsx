@@ -57,21 +57,14 @@ export default class DutyDownload extends Component<{}, DutyDownloadState> {
     }
   }
 
-  componentWillMount() {
-    this.initPage()
-  }
 
   onPullDownRefresh() {
     this.initPage()
   }
 
-  componentDidMount() { }
-
-  componentWillUnmount() { }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
+  componentDidMount() {
+    this.initPage()
+  }
 
   handleWeekClass(data: DutyInfo[]) {
     let $weekClass: string[][][] = [

@@ -34,17 +34,10 @@ export default class RegisterCode extends Component<{}, {
     }
   }
 
-  componentWillMount() {
+
+  componentDidMount() {
     this.refreshPage()
   }
-
-  componentDidMount() { }
-
-  componentWillUnmount() { }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
 
   handleChangeRegCode(value: string) {
     this.setState({

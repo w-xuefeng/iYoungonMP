@@ -74,10 +74,6 @@ export default class Index extends Component<{}, IndexPageStateType> {
     Taro.eventCenter.off('refreshPage')
   }
 
-  componentDidShow () { }
-
-  componentDidHide () {}
-
   getCurrentOnline() {
     return getCurrentOnline().then((rs: { status: boolean; resdata: Online[] | null }) => {
       this.setState({ currentOnline: rs.resdata || [] })

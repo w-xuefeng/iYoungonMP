@@ -64,17 +64,9 @@ export default class PersonalCenter extends Component<{}, PersonalCenterState> {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.refreshPage()
   }
-
-  componentDidMount() { }
-
-  componentWillUnmount() { }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
 
   onPullDownRefresh() {
     this.refreshPage()

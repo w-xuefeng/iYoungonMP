@@ -42,17 +42,9 @@ export default class NoticeRecent extends Component<{}, NoticeRecentState> {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.initPage()
   }
-
-  componentDidMount() { }
-
-  componentWillUnmount() { }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
 
   onPullDownRefresh() {
     this.initPage()

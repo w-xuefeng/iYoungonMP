@@ -33,18 +33,9 @@ export default class SignDetail extends Component<{}, Partial<SignRecord>> {
       stuid: ''
     }
   }
-
-  componentWillMount () {
+  componentDidMount () {
     this.initPage()
   }
-
-  componentDidMount () {}
-
-  componentWillUnmount () {}
-
-  componentDidShow () { }
-
-  componentDidHide () {}
 
   initPage() {
     const data = this.$router.preload

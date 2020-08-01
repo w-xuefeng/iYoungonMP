@@ -21,16 +21,6 @@ export default class YGCurrentOnline extends Component<YGCurrentOnlinePropsType>
     super(props)
   }
 
-  componentWillMount() { }
-
-  componentDidMount() { }
-
-  componentWillUnmount() { }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
-
   gotoSignDetail(detail: Online) {
     this.$preload(detail)
     Taro.navigateTo({ url: signDetailPagePath })

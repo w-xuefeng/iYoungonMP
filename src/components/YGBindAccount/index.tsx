@@ -22,16 +22,6 @@ export default class YGBindAccount extends Component<any, YGBindAccountStateType
     }
   }
 
-  componentWillMount () { }
-
-  componentDidMount () { }
-
-  componentWillUnmount () { }
-
-  componentDidShow () { }
-
-  componentDidHide () { }
-
   handleChangeStuid(value: any) {
     this.setState({
       stuid: value
