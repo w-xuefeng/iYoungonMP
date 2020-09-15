@@ -102,7 +102,7 @@ export default class NoticeRecent extends Component<{}, NoticeRecentState> {
         cardStyle={{
           marginTop: '30rpx',
           padding: '50rpx',
-          boxShadow: '2px 2px 3px rgba(0,0,0,0.4)',
+          boxShadow:  '1px 1px 1px rgba(0,0,0,0.4)',
           maxHeight: '50vh',
           overflow: 'auto'
         }}

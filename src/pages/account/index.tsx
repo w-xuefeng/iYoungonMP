@@ -1,6 +1,6 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View } from '@tarojs/components'
-import { AtTabs, AtTabsPane } from 'taro-ui'
+import { AtTabs, AtTabsPane, AtIcon } from 'taro-ui'
 import { getUserInfo } from '@/api'
 import {
   LocalData,
@@ -16,7 +16,8 @@ import './index.scss'
 
 
 interface AccountSettingStateType {
-  currentRegOrBindTabs: number
+  currentRegOrBindTabs: number,
+  loading: boolean
 }
 export default class AccountSetting extends Component<{}, AccountSettingStateType> {
 
@@ -35,7 +36,8 @@ export default class AccountSetting extends Component<{}, AccountSettingStateTyp
   constructor() {
     super(...arguments)
     this.state = {
-      currentRegOrBindTabs: 0
+      currentRegOrBindTabs: 0,
+      loading: true
     }
     this.login()
   }
@@ -58,6 +60,8 @@ export default class AccountSetting extends Component<{}, AccountSettingStateTyp
           LocalData.setItem(LDKey.TIMESTAMP, new Date().getTime())
           gotoIndex()
         }
+        this.setState({ loading: false })
+        // 用户未绑定帐号，显示绑定帐号页面
       })
     } else {
       // 已有有效登录信息
@@ -66,7 +70,7 @@ export default class AccountSetting extends Component<{}, AccountSettingStateTyp
   }
 
   render() {
-    const { currentRegOrBindTabs } = this.state
+    const { currentRegOrBindTabs, loading } = this.state
     const tabList = [
       {
         title: '绑定 iYoungon 帐号'
@@ -75,18 +79,25 @@ export default class AccountSetting extends Component<{}, AccountSettingStateTyp
         title: '注册 iYoungon 帐号'
       }
     ]
-    return (
-      <View className='account'>
-        <YGHeader title='设置账号' />
-        <AtTabs current={currentRegOrBindTabs} tabList={tabList} onClick={this.switchTabs.bind(this)}>
-          <AtTabsPane current={currentRegOrBindTabs} index={0} >
-            <YGBindAccount />
-          </AtTabsPane>
-          <AtTabsPane current={currentRegOrBindTabs} index={1}>
-            <YGRegister />
-          </AtTabsPane>
-        </AtTabs>
+    return loading ? (
+      <View className='loading yg-background'>
+        <View style='display: flex;margin: 0 auto;align-items:center;'>
+          <AtIcon value='loading-3' size='25' color='#333' className='span'></AtIcon>
+          <View className='at-col ml-10'>加载中...</View>
+        </View>
       </View>
-    )
+    ) : (
+        <View className='account'>
+          <YGHeader title='设置账号' />
+          <AtTabs current={currentRegOrBindTabs} tabList={tabList} onClick={this.switchTabs.bind(this)}>
+            <AtTabsPane current={currentRegOrBindTabs} index={0} >
+              <YGBindAccount />
+            </AtTabsPane>
+            <AtTabsPane current={currentRegOrBindTabs} index={1}>
+              <YGRegister />
+            </AtTabsPane>
+          </AtTabs>
+        </View>
+      )
   }
 }

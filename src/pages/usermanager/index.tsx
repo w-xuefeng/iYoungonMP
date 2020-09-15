@@ -126,7 +126,7 @@ export default class UserManager extends Component<{}, {
           },
           {
             k: 'utype',
-            v: 2
+            v: [2, 4]
           },
         ]
       }

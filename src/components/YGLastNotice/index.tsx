@@ -38,7 +38,7 @@ export default class YGLastNotice extends Component<YGLastNoticePropsType> {
               cardWidth='80%'
               cardStyle={{
                 marginTop: '60rpx',
-                boxShadow: '2px 2px 3px rgba(0,0,0,0.4)',
+                boxShadow:  '1px 1px 1px rgba(0,0,0,0.4)',
               }}
               itemStyle={{
                 display: 'flex',

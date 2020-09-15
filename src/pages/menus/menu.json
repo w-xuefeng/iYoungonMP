@@ -6,11 +6,13 @@
       {
         "name": "个人中心",
         "url": "/pages/personal/index",
+        "image": "https://pub.wangxuefeng.com.cn/asset/ygmp/iyoungon-icon/personal.svg",
         "icon": "user"
       },
       {
         "name": "我的简历",
         "url": "/pages/resume/index",
+        "image": "https://pub.wangxuefeng.com.cn/asset/ygmp/iyoungon-icon/resume.svg",
         "icon": "user"
       }
     ]
@@ -22,26 +24,31 @@
       {
         "name": "近期公告",
         "url": "/pages/notice/index",
+        "image": "https://pub.wangxuefeng.com.cn/asset/ygmp/iyoungon-icon/notice.svg",
         "icon": "clock"
       },
       {
         "name": "我的值班",
         "url": "/pages/duty/myduty",
+        "image": "https://pub.wangxuefeng.com.cn/asset/ygmp/iyoungon-icon/myduty.svg",
         "icon": "clock"
       },
       {
         "name": "值班表",
         "url": "/pages/duty/downloaddutylist",
-        "icon": "alert-circle"
+         "image": "https://pub.wangxuefeng.com.cn/asset/ygmp/iyoungon-icon/dutytable.svg",
+       "icon": "alert-circle"
       },
       {
         "name": "提出申请",
         "url": "/pages/apply/index",
+        "image": "https://pub.wangxuefeng.com.cn/asset/ygmp/iyoungon-icon/apply.svg",
         "icon": "message"
       },
       {
         "name": "我的申请",
         "url": "/pages/apply/myapply",
+        "image": "https://pub.wangxuefeng.com.cn/asset/ygmp/iyoungon-icon/myapply.svg",
         "icon": "alert-circle"
       }
     ]
@@ -53,26 +60,31 @@
       {
         "name": "发布公告",
         "url": "/pages/notice/post",
+        "image": "https://pub.wangxuefeng.com.cn/asset/ygmp/iyoungon-icon/pubnotice.svg",
         "icon": "clock"
       },
       {
         "name": "申请列表",
         "url": "/pages/apply/list",
+        "image": "https://pub.wangxuefeng.com.cn/asset/ygmp/iyoungon-icon/applylist.svg",
         "icon": "clock"
       },
       {
         "name": "自动查值班",
         "url": "/pages/duty/autoquery",
+        "image": "https://pub.wangxuefeng.com.cn/asset/ygmp/iyoungon-icon/autoquery.svg",
         "icon": "message"
       },
       {
         "name": "安排值班",
         "url": "/pages/duty/modifyduty",
+        "image": "https://pub.wangxuefeng.com.cn/asset/ygmp/iyoungon-icon/modifyduty.svg",
         "icon": "alert-circle"
       },
       {
         "name": "用户管理",
         "url": "/pages/usermanager/index",
+        "image": "https://pub.wangxuefeng.com.cn/asset/ygmp/iyoungon-icon/usermanage.svg",
         "icon": "alert-circle"
       }
     ]
@@ -84,26 +96,31 @@
       {
         "name": "网站WIFI设置",
         "url": "/pages/supermanager/wifioption",
+        "image": "https://pub.wangxuefeng.com.cn/asset/ygmp/iyoungon-icon/wifi.svg",
         "icon": "clock"
       },
       {
         "name": "网站位置设置",
         "url": "/pages/supermanager/locationlimit",
+        "image": "https://pub.wangxuefeng.com.cn/asset/ygmp/iyoungon-icon/location.svg",
         "icon": "clock"
       },
       {
         "name": "站员注册码设置",
         "url": "/pages/supermanager/registercode",
+        "image": "https://pub.wangxuefeng.com.cn/asset/ygmp/iyoungon-icon/registercode.svg",
         "icon": "message"
       },
       {
         "name": "设置管理员",
         "url": "/pages/supermanager/addmanager",
+        "image": "https://pub.wangxuefeng.com.cn/asset/ygmp/iyoungon-icon/addmanager.svg",
         "icon": "alert-circle"
       },
       {
         "name": "删除管理员",
         "url": "/pages/supermanager/delmanager",
+        "image": "https://pub.wangxuefeng.com.cn/asset/ygmp/iyoungon-icon/delmanager.svg",
         "icon": "alert-circle"
       }
     ]

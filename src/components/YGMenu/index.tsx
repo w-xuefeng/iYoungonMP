@@ -9,6 +9,7 @@ export interface Menu {
   url: string;
   icon: string;
   data?: any;
+  image?: string;
 }
 
 export interface MenuGroup {
@@ -43,6 +44,7 @@ export default class YGMenu extends Component<YGMenuPropsType> {
       {
         value: e.name,
         url: e.url,
+        image: e.image,
         iconInfo: {
           value: e.icon
         }
